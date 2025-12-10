@@ -14,7 +14,7 @@ namespace ExampleWebApi.Infrastructure
     public class ExampleDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
 
-        public ExampleDbContext(DbContextOptions options) : base(options) { }
+        public ExampleDbContext(DbContextOptions<ExampleDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -28,5 +28,9 @@ namespace ExampleWebApi.Infrastructure
             builder.Entity<IdentityUserLogin<Guid>>().ToTable("ExternalLogins");
             builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
         }
+
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Item> Items { get; set; }
+
     }
 }
