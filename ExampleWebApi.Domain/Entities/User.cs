@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace ExampleWebApi.Domain;
+namespace ExampleWebApi.Domain.Entities;
 
 public class User : IdentityUser<Guid>
 {

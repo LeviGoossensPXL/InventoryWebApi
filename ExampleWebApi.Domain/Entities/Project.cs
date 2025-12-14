@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExampleWebApi.Domain
+namespace ExampleWebApi.Domain.Entities
 {
     public class Project
     {

@@ -1,6 +1,5 @@
 using ExampleWebApi.Api.Services.Contracts;
 using ExampleWebApi.Api.Services;
-using ExampleWebApi.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
 using ExampleWebApi.Infrastructure;
+using ExampleWebApi.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

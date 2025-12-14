@@ -1,4 +1,4 @@
-﻿using ExampleWebApi.Domain;
+﻿using ExampleWebApi.Domain.Entities;
 
 namespace ExampleWebApi.Api.Services.Contracts;
 //DO NOT TOUCH THIS FILE!!

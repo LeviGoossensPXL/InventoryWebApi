@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using ExampleWebApi.Api.Services.Contracts;
-using ExampleWebApi.Domain;
+using ExampleWebApi.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ExampleWebApi.Api.Services;

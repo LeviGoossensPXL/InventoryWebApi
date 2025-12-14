@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ExampleWebApi.Api.Models;
 using ExampleWebApi.Api.Services.Contracts;
-using ExampleWebApi.Domain;
+using ExampleWebApi.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

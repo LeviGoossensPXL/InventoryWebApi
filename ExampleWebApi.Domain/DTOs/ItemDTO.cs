@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExampleWebApi.Domain
+namespace ExampleWebApi.Domain.DTOs
 {
-    public class Item
+    public class ItemDTO
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Image { get; set; }
         public string Brand { get; set; }
