@@ -51,7 +51,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Items");
+                    b.ToTable("Items", (string)null);
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.Project", b =>
@@ -72,7 +72,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.User", b =>
