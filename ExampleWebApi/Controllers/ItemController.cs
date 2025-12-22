@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ExampleWebApi.Api.Controllers
 {
     [Route("api/[controller]")]
-    [AllowAnonymous]
+    //[AllowAnonymous]
     public class ItemController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;
@@ -25,7 +25,7 @@ namespace ExampleWebApi.Api.Controllers
         [HttpGet]
         public IActionResult GetItems()
         {
-            return Ok(new { items = _context.Items });
+            return Ok(_context.Items);
         }
 
         [HttpGet("{id}")]
@@ -70,7 +70,7 @@ namespace ExampleWebApi.Api.Controllers
             }
             _mapper.Map(itemDTO, item);
             _context.SaveChanges();
-            return Ok(new { item = item });
+            return Ok(item);
         }
 
         [HttpDelete]
