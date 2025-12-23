@@ -136,6 +136,8 @@ var scope = app.Services.CreateScope();
 ExampleDbContext context = scope.ServiceProvider.GetRequiredService<ExampleDbContext>();
 context.Database.EnsureCreated();
 
+await SeedData.SeedUsersAsync(scope.ServiceProvider);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -34,7 +34,7 @@ namespace ExampleWebApi.Infrastructure
             builder.Entity<Project>().HasData(SeedData.Projects);
             builder.Entity<Group>().HasData(SeedData.Groups);
 
-            builder.Entity<User>().HasData(SeedData.Users);
+            // builder.Entity<User>().HasData(SeedData.Users);
             builder.Entity<Person>().HasData(SeedData.Persons);
         }
 
