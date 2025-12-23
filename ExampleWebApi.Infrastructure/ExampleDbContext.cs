@@ -34,7 +34,6 @@ namespace ExampleWebApi.Infrastructure
             builder.Entity<Project>().HasData(SeedData.Projects);
             builder.Entity<Group>().HasData(SeedData.Groups);
 
-            // builder.Entity<User>().HasData(SeedData.Users);
             builder.Entity<Person>().HasData(SeedData.Persons);
         }
 
