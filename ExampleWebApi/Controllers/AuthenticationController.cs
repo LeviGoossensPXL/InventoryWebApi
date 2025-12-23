@@ -47,8 +47,7 @@ public class AuthenticationController : ApiControllerBase
             var user = new User
             {
                 UserName = model.Email,
-                Email = model.Email,
-                NickName = model.NickName
+                Email = model.Email
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

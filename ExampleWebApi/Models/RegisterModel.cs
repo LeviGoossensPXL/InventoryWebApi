@@ -11,7 +11,4 @@ public class RegisterModel
     [Required]
     [MinLength(6)]
     public string Password { get; set; }
-
-    [Required]
-    public string NickName { get; set; }
 }

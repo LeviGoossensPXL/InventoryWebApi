@@ -18,6 +18,7 @@ namespace ExampleWebApi.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
             base.OnModelCreating(builder);
 
             builder.Entity<User>().ToTable("Users");
@@ -27,6 +28,14 @@ namespace ExampleWebApi.Infrastructure
             builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
             builder.Entity<IdentityUserLogin<Guid>>().ToTable("ExternalLogins");
             builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+
+
+            builder.Entity<Item>().HasData(SeedData.Items);
+            builder.Entity<Project>().HasData(SeedData.Projects);
+            builder.Entity<Group>().HasData(SeedData.Groups);
+
+            builder.Entity<User>().HasData(SeedData.Users);
+            builder.Entity<Person>().HasData(SeedData.Persons);
         }
 
         public DbSet<Project> Projects { get; set; }
