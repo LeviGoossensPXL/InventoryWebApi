@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace ExampleWebApi.Api.Controllers
 {
     [Route("api/[controller]")]
-    //[AllowAnonymous]
     public class ItemController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;
@@ -40,7 +39,7 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return NotFound();
             }
-            return Ok(new { item = item });
+            return Ok(item);
         }
 
         [HttpPost]
