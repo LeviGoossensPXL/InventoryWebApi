@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -18,6 +18,7 @@ namespace ExampleWebApi.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
             base.OnModelCreating(builder);
 
             builder.Entity<User>().ToTable("Users");
@@ -31,6 +32,6 @@ namespace ExampleWebApi.Infrastructure
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<Item> Items { get; set; }
-
+        public DbSet<Group> Groups { get; set; }
     }
 }
