@@ -49,33 +49,6 @@ namespace ExampleWebApi.Infrastructure
             }
         };
 
-        public static IEnumerable<Person> Persons => new List<Person> {
-            new Person
-            {
-                Id = Guid.NewGuid(),
-                UserId = SeedUsers.ToList()[0].Id,
-                NickName = "dragon"
-            },
-            new Person
-            {
-                Id = Guid.NewGuid(),
-                UserId = SeedUsers.ToList()[1].Id,
-                NickName = "loren"
-            },
-            new Person
-            {
-                Id = Guid.NewGuid(),
-                UserId = SeedUsers.ToList()[2].Id,
-                NickName = "cyber"
-            },
-            new Person
-            {
-                Id = Guid.NewGuid(),
-                UserId = SeedUsers.ToList()[3].Id,
-                NickName = "lord"
-            }
-        };
-
         public struct SeedUser
         {
             public Guid Id;
@@ -89,35 +62,6 @@ namespace ExampleWebApi.Infrastructure
             new SeedUser { Id = Guid.Parse("5ef92990-dacb-44b5-8d1e-c6ca68d703fb"), Email = "luca3@gmail.com", Password = "password3" },
             new SeedUser { Id = Guid.Parse("f4fdc5c1-bc32-4768-90b5-644ebc069962"), Email = "tom4@gmail.com", Password = "password4" }
         };
-        
-        public static async Task SeedUsersAsync(IServiceProvider services)
-        {
-            var userManager = services.GetRequiredService<UserManager<User>>();
-
-            foreach (var seedUser in SeedUsers)
-            {
-                var existingUser = await userManager.FindByEmailAsync(seedUser.Email);
-                if (existingUser != null)
-                    continue;
-
-                var user = new User
-                {
-                    UserName = seedUser.Email,
-                    Email = seedUser.Email,
-                    EmailConfirmed = true
-                };
-
-                var result = await userManager.CreateAsync(user, seedUser.Password);
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(
-                        $"Failed to create user {seedUser.Email}: " +
-                        string.Join(", ", result.Errors.Select(e => e.Description))
-                    );
-                }
-            }
-        }
 
         public static IEnumerable<Group> Groups => new List<Group> {
             new Group
