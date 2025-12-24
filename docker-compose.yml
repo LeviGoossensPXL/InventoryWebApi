@@ -1,0 +1,28 @@
+version: "3.4"
+
+services:
+    inventory.api:
+        image: webapi
+        container_name: inventory.api
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        ports:
+            - "8080:8080"
+            - "8081:8081"
+    
+    inventory.database:
+        image: postgres:17
+        container_name: inventory.database
+        environment:
+            - POSTGRES_DB=inventory
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        volumes :
+            - "inventory-db:/var/lib/postgresql/data"
+        ports:
+            - "5432:5432"
+volumes:
+  inventory-db:
