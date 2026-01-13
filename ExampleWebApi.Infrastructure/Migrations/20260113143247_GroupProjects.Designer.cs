@@ -4,6 +4,7 @@ using ExampleWebApi.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExampleWebApi.Infrastructure.Migrations
 {
     [DbContext(typeof(ExampleDbContext))]
-    partial class ExampleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260113143247_GroupProjects")]
+    partial class GroupProjects
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,21 +74,6 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("GroupProjects");
-                });
-
-            modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupUser", b =>
-                {
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("GroupId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("GroupUsers");
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.Item", b =>
@@ -378,25 +366,6 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupUser", b =>
-                {
-                    b.HasOne("ExampleWebApi.Domain.Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ExampleWebApi.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
