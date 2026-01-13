@@ -9,9 +9,13 @@ services:
             dockerfile: Dockerfile
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
+            - ConnectionStrings__ExampleWebApiDbPostgres=Host=inventory.database;Port=5432;Database=inventory;Username=postgres;Password=postgres
+        networks:
+            - app-network
         ports:
             - "8080:8080"
-            - "8081:8081"
+        depends_on:
+            - inventory.database
     
     inventory.database:
         image: postgres:17
@@ -20,9 +24,13 @@ services:
             - POSTGRES_DB=inventory
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
-        volumes :
+        networks:
+            - app-network
+        volumes:
             - "inventory-db:/var/lib/postgresql/data"
         ports:
             - "5432:5432"
 volumes:
-  inventory-db:
+    inventory-db:
+networks:
+    app-network:
