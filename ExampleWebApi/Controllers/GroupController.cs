@@ -79,6 +79,30 @@ namespace ExampleWebApi.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("addProjects")]
+        public IActionResult AddProjectsToGroup([FromBody] AddProjectsToGroupDTO addProjectsToGroupDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == addProjectsToGroupDto.GroupId);
+            if (selectedGroup == null)
+            {
+                return NotFound();
+            }
+            var selectedProjects = _context.Items.Where(i => addProjectsToGroupDto.ProjectIds.Contains(i.Id));
+            if (selectedProjects.Count() != addProjectsToGroupDto.ProjectIds.Count())
+            {
+                return NotFound();
+            }
+            var groupProjects = selectedProjects.Select(i => new GroupProject { GroupId = selectedGroup.Id, ProjectId = i.Id });
+            _context.GroupProjects.AddRangeAsync(groupProjects);
+
+            _context.SaveChanges();
+            return Ok();
+        }
+
         [HttpPut]
         public IActionResult UpdateGroup(int id, [FromBody] GroupDTO groupDTO)
         {
