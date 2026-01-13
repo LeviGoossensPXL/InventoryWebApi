@@ -39,5 +39,6 @@ namespace ExampleWebApi.Infrastructure
         public DbSet<GroupItem> GroupItems { get; set; }
         public DbSet<GroupProject> GroupProjects { get; set; }
         public DbSet<GroupUser> GroupUsers { get; set; }
+        public DbSet<Person> Persons { get; set; }
     }
 }
