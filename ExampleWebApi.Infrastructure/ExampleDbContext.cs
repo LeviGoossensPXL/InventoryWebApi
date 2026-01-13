@@ -33,5 +33,6 @@ namespace ExampleWebApi.Infrastructure
         public DbSet<Project> Projects { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<GroupItem> GroupItems { get; set; }
     }
 }
