@@ -46,10 +46,10 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupItem", b =>
                 {
                     b.Property<int>("GroupId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("ItemId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("GroupId", "ItemId");
 
@@ -61,10 +61,10 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupProject", b =>
                 {
                     b.Property<int>("GroupId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("ProjectId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("GroupId", "ProjectId");
 
@@ -76,10 +76,10 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupUser", b =>
                 {
                     b.Property<int>("GroupId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("GroupId", "UserId");
 
@@ -118,26 +118,6 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Items");
-                });
-
-            modelBuilder.Entity("ExampleWebApi.Domain.Entities.Person", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("NickName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Persons");
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.Project", b =>
@@ -189,7 +169,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
                     b.Property<string>("NickName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
