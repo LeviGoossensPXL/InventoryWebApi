@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace ExampleWebApi.Domain.Entities
 {
-    public class Person
+    public class GroupUser
     {
-        public Guid Id { get; set; }
-
-        public string NickName { get; set; }
+        public int GroupId { get; set; }
+        public Group Group { get; set; }
 
         public Guid UserId { get; set; }
-        public User User { get; set; } = null!;
+        public User User { get; set; }
     }
 }

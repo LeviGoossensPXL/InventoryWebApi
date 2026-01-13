@@ -47,6 +47,7 @@ public class AuthenticationController : ApiControllerBase
             var user = new User
             {
                 UserName = model.Email,
+                NickName = model.Nickname,
                 Email = model.Email
             };
 
