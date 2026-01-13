@@ -100,12 +100,15 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<ExampleDbContext>(options =>
 {
-    if (configuration.GetConnectionString("ExampleWebApiDbConnection") is null)
-    {
-        throw new ApplicationException("Please provide a connectionstring for the database");
-    }
-    var connectionString = configuration.GetConnectionString("ExampleWebApiDbConnection");
-    options.UseSqlServer(connectionString).EnableSensitiveDataLogging();
+    //if (configuration.GetConnectionString("ExampleWebApiDbConnection") is null)
+    //{
+    //    throw new ApplicationException("Please provide a connectionstring for the database");
+    //}
+    //var connectionString = configuration.GetConnectionString("ExampleWebApiDbConnection");
+    var postgressString = configuration.GetConnectionString("ExampleWebApiDbPostgres");
+    //connectionString = "Server=mssql,1433;Database=MyDb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;";
+    //options.UseSqlServer(connectionString).EnableSensitiveDataLogging();
+    options.UseNpgsql(postgressString).EnableSensitiveDataLogging();
 });
 
 builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
@@ -143,9 +146,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
 app.UseCors("CorsPolicy");
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

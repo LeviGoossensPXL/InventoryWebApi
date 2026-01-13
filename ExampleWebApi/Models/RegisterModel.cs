@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExampleWebApi.Api.Models;
 
@@ -9,9 +9,10 @@ public class RegisterModel
     public string Email { get; set; }
 
     [Required]
-    [MinLength(6)]
-    public string Password { get; set; }
+    [MinLength(4)]
+    public string Nickname { get; set; }
 
     [Required]
-    public string NickName { get; set; }
+    [MinLength(6)]
+    public string Password { get; set; }
 }

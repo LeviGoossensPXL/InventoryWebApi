@@ -10,6 +10,7 @@ namespace ExampleWebApi.Api.Profiles
         {
             CreateMap<Item, ItemDTO>().ReverseMap();
             CreateMap<Project, ProjectDTO>().ReverseMap();
+            CreateMap<Group, GroupDTO>().ReverseMap();
         }
     }
 }
