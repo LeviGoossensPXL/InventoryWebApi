@@ -55,6 +55,30 @@ namespace ExampleWebApi.Api.Controllers
             return CreatedAtAction(nameof(GetGroup), new { id = group.Id }, group);
         }
 
+        [HttpPost("addItems")]
+        public IActionResult AddItemsToGroup([FromBody] AddItemsToGroupDTO addItemsToGroupDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == addItemsToGroupDto.GroupId);
+            if (selectedGroup == null)
+            {
+                return NotFound();
+            }
+            var selectedItems = _context.Items.Where(i => addItemsToGroupDto.ItemIds.Contains(i.Id));
+            if (selectedItems.Count() != addItemsToGroupDto.ItemIds.Count())
+            {
+                return NotFound();
+            }
+            var groupItems = selectedItems.Select(i => new GroupItem { GroupId = selectedGroup.Id, ItemId = i.Id });
+            _context.GroupItems.AddRangeAsync(groupItems);
+
+            _context.SaveChanges();
+            return Ok();
+        }
+
         [HttpPut]
         public IActionResult UpdateGroup(int id, [FromBody] GroupDTO groupDTO)
         {

@@ -28,6 +28,7 @@ namespace ExampleWebApi.Infrastructure
             builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
             builder.Entity<IdentityUserLogin<Guid>>().ToTable("ExternalLogins");
             builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+            builder.Entity<GroupItem>().HasKey(gi => new { gi.GroupId, gi.ItemId });
         }
 
         public DbSet<Project> Projects { get; set; }
