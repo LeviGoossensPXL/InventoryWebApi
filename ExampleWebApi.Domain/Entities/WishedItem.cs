@@ -13,7 +13,11 @@ namespace ExampleWebApi.Domain.Entities
         public User User { get; set; }
         public int ItemId { get; set; }
         public Item Item { get; set; }
-        public int? Priority { get; set; }
 
+        public ICollection<GroupWishedItem> GroupWishedItems { get; set; } = [];
+        public ICollection<Group> Groups { get; set; } = [];
+
+        public decimal? Price { get; set; }
+        public int? Priority { get; set; }
     }
 }

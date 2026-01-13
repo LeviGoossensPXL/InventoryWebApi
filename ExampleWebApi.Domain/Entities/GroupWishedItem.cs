@@ -13,5 +13,4 @@ namespace ExampleWebApi.Domain.Entities
         public int WishedItemId { get; set; }
         public WishedItem WishedItem { get; set; }
     }
-
 }

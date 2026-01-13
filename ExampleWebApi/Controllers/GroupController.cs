@@ -56,7 +56,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPost("addItems")]
-        public IActionResult AddItemsToGroup([FromBody] AddItemsToGroupDTO addItemsToGroupDto)
+        public async Task<IActionResult> AddItemsToGroup([FromBody] AddItemsToGroupDTO addItemsToGroupDto)
         {
             if (!ModelState.IsValid)
             {
@@ -67,15 +67,24 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return NotFound();
             }
-            var selectedItems = _context.Items.Where(i => addItemsToGroupDto.ItemIds.Contains(i.Id));
-            if (selectedItems.Count() != addItemsToGroupDto.ItemIds.Count())
+
+            var selectedOwnedItems = _context.OwnedItems.Where(oi => addItemsToGroupDto.OwnedItemIds.Contains(oi.Id));
+            if (selectedOwnedItems.Count() != addItemsToGroupDto.OwnedItemIds.Count())
             {
                 return NotFound();
             }
-            var groupItems = selectedItems.Select(i => new GroupItem { GroupId = selectedGroup.Id, ItemId = i.Id });
-            _context.GroupItems.AddRangeAsync(groupItems);
+            var groupOwnedItems = selectedOwnedItems.Select(oi => new GroupOwnedItem { GroupId = selectedGroup.Id, OwnedItemId = oi.Id });
+            await _context.GroupOwnedItems.AddRangeAsync(groupOwnedItems);
 
-            _context.SaveChanges();
+            var selectedWishedItems = _context.WishedItems.Where(i => addItemsToGroupDto.WishedItemIds.Contains(i.Id));
+            if (selectedWishedItems.Count() != addItemsToGroupDto.WishedItemIds.Count())
+            {
+                return NotFound();
+            }
+            var groupWishedItems = selectedWishedItems.Select(i => new GroupWishedItem { GroupId = selectedGroup.Id, WishedItemId = i.Id });
+            await _context.GroupWishedItems.AddRangeAsync(groupWishedItems);
+
+            await _context.SaveChangesAsync();
             return Ok();
         }
 

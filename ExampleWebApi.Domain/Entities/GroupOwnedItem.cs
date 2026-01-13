@@ -13,5 +13,4 @@ namespace ExampleWebApi.Domain.Entities
         public int OwnedItemId { get; set; }
         public OwnedItem OwnedItem { get; set; }
     }
-
 }

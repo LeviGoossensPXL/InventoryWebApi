@@ -14,6 +14,10 @@ namespace ExampleWebApi.Domain.Entities
         public User Owner { get; set; }
         public int ItemId { get; set; }
         public Item Item { get; set; }
+
+        public ICollection<GroupOwnedItem> GroupOwnedItems { get; set; } = [];
+        public ICollection<Group> Groups { get; set; } = [];
+
         public decimal? Price { get; set; }
         public string? ImageUrl { get; set; }
         public DateTime? AcquiredAt { get; set; }
