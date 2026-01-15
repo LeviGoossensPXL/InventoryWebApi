@@ -121,10 +121,11 @@ namespace ExampleWebApi.Api.Controllers
                 await System.IO.File.WriteAllBytesAsync(filePath, bytes);
 
                 // 3. URL opslaan in database (voor de client)
-                item.Image = $"{Request.Scheme}://{Request.Host}/images/items/{fileName}";
+                // item.Image = $"{Request.Scheme}://{Request.Host}/images/items/{fileName}";
                 _context.SaveChanges();
 
-                return Ok(item.Image);
+                // return Ok(item.Image);
+                return Ok();
             }
         }
     }
