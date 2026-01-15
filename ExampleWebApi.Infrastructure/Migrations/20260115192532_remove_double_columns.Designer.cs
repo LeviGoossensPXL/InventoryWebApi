@@ -3,6 +3,7 @@ using System;
 using ExampleWebApi.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ExampleWebApi.Infrastructure.Migrations
 {
     [DbContext(typeof(ExampleDbContext))]
-    partial class ExampleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260115192532_remove_double_columns")]
+    partial class remove_double_columns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -139,6 +142,9 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.Property<DateTime?>("AcquiredAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
@@ -156,6 +162,8 @@ namespace ExampleWebApi.Infrastructure.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("ItemId");
 
@@ -176,11 +184,16 @@ namespace ExampleWebApi.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
 
                     b.ToTable("Projects");
                 });
@@ -204,6 +217,9 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -244,6 +260,8 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -262,6 +280,9 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
@@ -275,6 +296,8 @@ namespace ExampleWebApi.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("ItemId");
 
@@ -416,7 +439,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupOwnedItem", b =>
                 {
                     b.HasOne("ExampleWebApi.Domain.Entities.Group", "Group")
-                        .WithMany("GroupOwnedItems")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -435,7 +458,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupProject", b =>
                 {
                     b.HasOne("ExampleWebApi.Domain.Entities.Group", "Group")
-                        .WithMany("GroupProjects")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -454,7 +477,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupUser", b =>
                 {
                     b.HasOne("ExampleWebApi.Domain.Entities.Group", "Group")
-                        .WithMany("GroupUsers")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -473,7 +496,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupWishedItem", b =>
                 {
                     b.HasOne("ExampleWebApi.Domain.Entities.Group", "Group")
-                        .WithMany("GroupWishedItems")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -491,6 +514,10 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.OwnedItem", b =>
                 {
+                    b.HasOne("ExampleWebApi.Domain.Entities.Group", null)
+                        .WithMany("OwnedItems")
+                        .HasForeignKey("GroupId");
+
                     b.HasOne("ExampleWebApi.Domain.Entities.Item", "Item")
                         .WithMany("OwnedItems")
                         .HasForeignKey("ItemId")
@@ -508,8 +535,26 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("ExampleWebApi.Domain.Entities.Project", b =>
+                {
+                    b.HasOne("ExampleWebApi.Domain.Entities.Group", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("GroupId");
+                });
+
+            modelBuilder.Entity("ExampleWebApi.Domain.Entities.User", b =>
+                {
+                    b.HasOne("ExampleWebApi.Domain.Entities.Group", null)
+                        .WithMany("Users")
+                        .HasForeignKey("GroupId");
+                });
+
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.WishedItem", b =>
                 {
+                    b.HasOne("ExampleWebApi.Domain.Entities.Group", null)
+                        .WithMany("WishedItems")
+                        .HasForeignKey("GroupId");
+
                     b.HasOne("ExampleWebApi.Domain.Entities.Item", "Item")
                         .WithMany("WishedItems")
                         .HasForeignKey("ItemId")
@@ -580,13 +625,13 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.Group", b =>
                 {
-                    b.Navigation("GroupOwnedItems");
+                    b.Navigation("OwnedItems");
 
-                    b.Navigation("GroupProjects");
+                    b.Navigation("Projects");
 
-                    b.Navigation("GroupUsers");
+                    b.Navigation("Users");
 
-                    b.Navigation("GroupWishedItems");
+                    b.Navigation("WishedItems");
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.Item", b =>

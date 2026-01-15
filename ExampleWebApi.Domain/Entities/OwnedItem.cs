@@ -16,7 +16,6 @@ namespace ExampleWebApi.Domain.Entities
         public Item Item { get; set; }
 
         public ICollection<GroupOwnedItem> GroupOwnedItems { get; set; } = [];
-        public ICollection<Group> Groups { get; set; } = [];
 
         public decimal? Price { get; set; }
         public string? ImageUrl { get; set; }
