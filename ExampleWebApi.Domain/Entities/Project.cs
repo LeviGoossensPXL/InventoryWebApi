@@ -12,6 +12,8 @@ namespace ExampleWebApi.Domain.Entities
 
         public ICollection<GroupProject> GroupProjects { get; set; } = [];
 
+        public ICollection<ProjectItem> ProjectItems { get; set; } = [];
+
         public string Name { get; set; }
         public string Description { get; set; }
     }
