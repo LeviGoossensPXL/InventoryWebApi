@@ -1,4 +1,4 @@
-﻿namespace ExampleWebApi.Domain.DTOs
+﻿namespace ExampleWebApi.Domain.DTOs.Responses
 {
     public class ResponseUserDto
     {
