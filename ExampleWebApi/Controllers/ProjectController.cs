@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ExampleWebApi.Domain.DTOs;
+using ExampleWebApi.Domain.DTOs.Responses;
 using ExampleWebApi.Domain.Entities;
 using ExampleWebApi.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -27,49 +28,50 @@ namespace ExampleWebApi.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProjects()
         {
-            var projects = await _context.Projects
-                .Select(p => new
+            var dtos = await _context.Projects
+                .AsNoTracking()
+                .Select(p => new ProjectResponseDto
                 {
-                    id = p.Id,
-                    name = p.Name,
-                    description = p.Description,
-                    items = p.ProjectItems.Select(pi => new
-                    {
-                        itemId = pi.ItemId,
-                        amount = pi.Amount
-
-                    }),
-                    groupIds = p.GroupProjects.Select(gp => gp.GroupId)
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    ItemIds = p.ProjectItems
+                        .Select(pi => pi.ItemId)
+                        .ToList(),
+                    GroupIds = p.GroupProjects
+                        .Select(gp => gp.GroupId)
+                        .ToList()
                 })
                 .ToListAsync();
-            return Ok(projects);
+
+            return Ok(dtos);
         }
 
+        // GET: api/Projects/5
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetProject(int id)
         {
-            var project = await _context.Projects
+            var dto = await _context.Projects
+                .AsNoTracking()
                 .Where(p => p.Id == id)
-                .Select(p => new
+                .Select(p => new ProjectResponseDto
                 {
-                    id = p.Id,
-                    name = p.Name,
-                    description = p.Description,
-                    items = p.ProjectItems.Select(pi => new
-                    {
-                        itemId = pi.ItemId,
-                        amount = pi.Amount
-                    }),
-                    groupIds = p.GroupProjects.Select(gp => gp.GroupId)
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    ItemIds = p.ProjectItems
+                        .Select(pi => pi.ItemId)
+                        .ToList(),
+                    GroupIds = p.GroupProjects
+                        .Select(gp => gp.GroupId)
+                        .ToList()
                 })
                 .FirstOrDefaultAsync();
 
-            if (project == null)
-            {
+            if (dto == null)
                 return NotFound();
-            }
 
-            return Ok(project);
+            return Ok(dto);
         }
 
         [HttpPost]
