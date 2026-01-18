@@ -8,7 +8,6 @@ namespace ExampleWebApi.Domain.DTOs
 {
     public class AddUsersToGroupDto
     {
-        public int GroupId { get; set; }
         public IEnumerable<Guid> UserIds { get; set; }
     }
 }

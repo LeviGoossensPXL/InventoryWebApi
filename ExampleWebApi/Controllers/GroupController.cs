@@ -56,14 +56,14 @@ namespace ExampleWebApi.Api.Controllers
             return CreatedAtAction(nameof(GetGroup), new { id = group.Id }, group);
         }
 
-        [HttpPost("addItems")]
-        public async Task<IActionResult> AddItemsToGroup([FromBody] AddItemsToGroupDto addItemsToGroupDto)
+        [HttpPost("{id:int}/addItems")]
+        public async Task<IActionResult> AddItemsToGroup(int id, [FromBody] AddItemsToGroupDto addItemsToGroupDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == addItemsToGroupDto.GroupId);
+            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == id);
             if (selectedGroup == null)
             {
                 return NotFound();
@@ -89,14 +89,14 @@ namespace ExampleWebApi.Api.Controllers
             return Ok();
         }
 
-        [HttpPost("addProjects")]
-        public IActionResult AddProjectsToGroup([FromBody] AddProjectsToGroupDto addProjectsToGroupDto)
+        [HttpPost("{id:int}/addProjects")]
+        public IActionResult AddProjectsToGroup(int id, [FromBody] AddProjectsToGroupDto addProjectsToGroupDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == addProjectsToGroupDto.GroupId);
+            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == id);
             if (selectedGroup == null)
             {
                 return NotFound();
@@ -113,14 +113,14 @@ namespace ExampleWebApi.Api.Controllers
             return Ok();
         }
 
-        [HttpPost("addUsers")]
-        public IActionResult AddUsersToGroup([FromBody] AddUsersToGroupDto addUsersToGroupDto)
+        [HttpPost("{id:int}/addUsers")]
+        public IActionResult AddUsersToGroup(int id, [FromBody] AddUsersToGroupDto addUsersToGroupDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == addUsersToGroupDto.GroupId);
+            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == id);
             if (selectedGroup == null)
             {
                 return NotFound();
