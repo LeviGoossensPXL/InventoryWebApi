@@ -1,8 +1,10 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExampleWebApi.Api.Controllers;
 
+[AllowAnonymous]
 public abstract class ApiControllerBase : ControllerBase
 {
     /// <summary>
