@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using ExampleWebApi.Domain.DTOs;
+using ExampleWebApi.Domain.DTOs.Responses;
 using ExampleWebApi.Domain.Entities;
 using ExampleWebApi.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExampleWebApi.Api.Controllers
 {
@@ -25,7 +27,25 @@ namespace ExampleWebApi.Api.Controllers
         [HttpGet]
         public IActionResult GetGroups()
         {
-            return Ok(_context.Groups);
+            var groups = _context.Groups
+                .Include(g => g.GroupOwnedItems)
+                .Include(g => g.GroupWishedItems)
+                .Include(g => g.GroupProjects)
+                .Include(g => g.GroupUsers)
+                .ToList();
+
+            var dtoList = groups.Select(g => new GroupResponseDto
+            {
+                Id = g.Id,
+                Name = g.Name,
+                Description = g.Description,
+                OwnedItemIds = g.GroupOwnedItems.Select(goi => goi.OwnedItemId).ToList(),
+                WishedItemIds = g.GroupWishedItems.Select(gwi => gwi.WishedItemId).ToList(),
+                ProjectIds = g.GroupProjects.Select(gp => gp.ProjectId).ToList(),
+                UserIds = g.GroupUsers.Select(gu => gu.UserId).ToList()
+            }).ToList();
+
+            return Ok(dtoList);
         }
 
         [HttpGet("{id}")]
@@ -35,12 +55,31 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var group = _context.Groups.FirstOrDefault(i => i.Id == id);
+
+            var group = _context.Groups
+                .Include(g => g.GroupOwnedItems)
+                .Include(g => g.GroupWishedItems)
+                .Include(g => g.GroupProjects)
+                .Include(g => g.GroupUsers)
+                .FirstOrDefault(g => g.Id == id);
+
             if (group == null)
             {
                 return NotFound();
             }
-            return Ok(group);
+
+            var dto = new GroupResponseDto
+            {
+                Id = group.Id,
+                Name = group.Name,
+                Description = group.Description,
+                OwnedItemIds = group.GroupOwnedItems.Select(goi => goi.OwnedItemId).ToList(),
+                WishedItemIds = group.GroupWishedItems.Select(gwi => gwi.WishedItemId).ToList(),
+                ProjectIds = group.GroupProjects.Select(gp => gp.ProjectId).ToList(),
+                UserIds = group.GroupUsers.Select(gu => gu.UserId).ToList()
+            };
+
+            return Ok(dto);
         }
 
         [HttpPost]
