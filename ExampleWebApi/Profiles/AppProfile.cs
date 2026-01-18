@@ -8,15 +8,15 @@ namespace ExampleWebApi.Api.Profiles
     {
         public AppProfile()
         {
-            CreateMap<Item, ItemDTO>().ReverseMap();
+            CreateMap<Item, ItemDto>().ReverseMap();
             
             CreateMap<WishedItem, WishedItemDto>().ReverseMap();
             CreateMap<OwnedItem, OwnedItemDto>().ReverseMap();
             
-            CreateMap<Project, ProjectDTO>().ReverseMap();
-            CreateMap<Group, GroupDTO>().ReverseMap();
+            CreateMap<Project, ProjectDto>().ReverseMap();
+            CreateMap<Group, GroupDto>().ReverseMap();
 
-            CreateMap<User, ResponseUserDTO>();
+            CreateMap<User, ResponseUserDto>();
         }
     }
 }

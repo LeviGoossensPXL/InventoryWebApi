@@ -45,7 +45,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddGroup([FromBody] GroupDTO groupDTO)
+        public IActionResult AddGroup([FromBody] GroupDto groupDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -58,7 +58,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPost("addItems")]
-        public async Task<IActionResult> AddItemsToGroup([FromBody] AddItemsToGroupDTO addItemsToGroupDto)
+        public async Task<IActionResult> AddItemsToGroup([FromBody] AddItemsToGroupDto addItemsToGroupDto)
         {
             if (!ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPost("addProjects")]
-        public IActionResult AddProjectsToGroup([FromBody] AddProjectsToGroupDTO addProjectsToGroupDto)
+        public IActionResult AddProjectsToGroup([FromBody] AddProjectsToGroupDto addProjectsToGroupDto)
         {
             if (!ModelState.IsValid)
             {
@@ -115,7 +115,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPost("addUsers")]
-        public IActionResult AddUsersToGroup([FromBody] AddUsersToGroupDTO addUsersToGroupDto)
+        public IActionResult AddUsersToGroup([FromBody] AddUsersToGroupDto addUsersToGroupDto)
         {
             if (!ModelState.IsValid)
             {
@@ -139,7 +139,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateGroup(int id, [FromBody] GroupDTO groupDTO)
+        public IActionResult UpdateGroup(int id, [FromBody] GroupDto groupDTO)
         {
             if (!ModelState.IsValid)
             {

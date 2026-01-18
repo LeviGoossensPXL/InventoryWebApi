@@ -10,13 +10,13 @@ namespace ExampleWebApi.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class ItemController : ApiControllerBase
+    public class OwnedItemController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _environment;
 
-        public ItemController(ExampleDbContext context, IMapper mapper, IWebHostEnvironment environment)
+        public OwnedItemController(ExampleDbContext context, IMapper mapper, IWebHostEnvironment environment)
         {
             this._context = context;
             this._mapper = mapper;
@@ -24,82 +24,82 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetItems()
+        public IActionResult GetOwnedItems()
         {
-            return Ok(_context.Items);
+            return Ok(_context.OwnedItems);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetItem(int id)
+        public IActionResult GetOwnedItem(int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var item = _context.Items.FirstOrDefault(i => i.Id == id);
-            if (item == null)
+            var ownedItem = _context.OwnedItems.FirstOrDefault(i => i.Id == id);
+            if (ownedItem == null)
             {
                 return NotFound();
             }
-            return Ok(item);
+            return Ok(ownedItem);
         }
 
         [HttpPost]
-        public IActionResult AddItem([FromBody] ItemDto itemDTO)
+        public IActionResult AddOwnedItem([FromBody] OwnedItemDto ownedItemDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var item = _mapper.Map<Item>(itemDTO);
-            _context.Items.Add(item);
+            var ownedItem = _mapper.Map<OwnedItem>(ownedItemDto);
+            _context.OwnedItems.Add(ownedItem);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+            return CreatedAtAction(nameof(GetOwnedItem), new { id = ownedItem.Id }, ownedItem);
         }
 
         [HttpPut]
-        public IActionResult UpdateItem(int id, [FromBody] ItemDto itemDTO)
+        public IActionResult UpdateOwnedItem(int id, [FromBody] OwnedItemDto ownedItemDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var item = _context.Items.FirstOrDefault(i => i.Id == id);
-            if (item == null)
+            var ownedItem = _context.OwnedItems.FirstOrDefault(i => i.Id == id);
+            if (ownedItem == null)
             {
                 return NotFound();
             }
-            _mapper.Map(itemDTO, item);
+            _mapper.Map(ownedItemDto, ownedItem);
             _context.SaveChanges();
-            return Ok(item);
+            return Ok(ownedItem);
         }
 
         [HttpDelete]
-        public IActionResult DeleteItem(int id)
+        public IActionResult DeleteOwnedItem(int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var item = _context.Items.FirstOrDefault(i => i.Id == id);
-            if (item == null)
+            var ownedItem = _context.OwnedItems.FirstOrDefault(i => i.Id == id);
+            if (ownedItem == null)
             {
                 return NotFound();
             }
-            _context.Items.Remove(item);
+            _context.OwnedItems.Remove(ownedItem);
             _context.SaveChanges();
             return Ok(new { id = id });
         }
 
         [HttpPost("{id:int}/image")]
-        public async Task<IActionResult> UploadImage(int id, IFormFile image) // TODO use minio for a bucket with these files
+        public async Task<IActionResult> UploadImage(int id, IFormFile image) // TODO use minio for a bucket
         {
             if (image == null || image.Length == 0)
             {
                 return BadRequest("Image is required.");
             }
-            var item = _context.Items.FirstOrDefault(i => i.Id == id);
-            if (item == null)
+            var ownedItem = _context.OwnedItems.FirstOrDefault(i => i.Id == id);
+            if (ownedItem == null)
             {
                 throw new KeyNotFoundException($"item with id {id} does not exist.");
             }
@@ -113,7 +113,7 @@ namespace ExampleWebApi.Api.Controllers
                 // 1. Bestandsnaam genereren
                 string fileName = $"{Guid.NewGuid()}.{ext.TrimStart('.')}";
 
-                string imagesFolder = Path.Combine(_environment.WebRootPath, "images", "items");
+                string imagesFolder = Path.Combine(_environment.WebRootPath, "images", "owned_items");
                 // Zorg dat de folder bestaat
                 Directory.CreateDirectory(imagesFolder);
 

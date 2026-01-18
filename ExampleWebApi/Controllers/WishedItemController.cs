@@ -10,83 +10,83 @@ namespace ExampleWebApi.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class ProjectController : ApiControllerBase
+    public class WishedItemController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _environment;
 
-        public ProjectController(ExampleDbContext context, IMapper mapper, IWebHostEnvironment environment)
+        public WishedItemController(ExampleDbContext context, IMapper mapper, IWebHostEnvironment environment)
         {
-            _context = context;
-            _mapper = mapper;
-            _environment = environment;
+            this._context = context;
+            this._mapper = mapper;
+            this._environment = environment;
         }
 
         [HttpGet]
-        public IActionResult GetProjects()
+        public IActionResult GetWishedItems()
         {
-            return Ok(_context.Projects);
+            return Ok(_context.WishedItems);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetProject(int id)
+        public IActionResult GetWishedItem(int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var project = _context.Projects.FirstOrDefault(i => i.Id == id);
-            if (project == null)
+            var item = _context.WishedItems.FirstOrDefault(i => i.Id == id);
+            if (item == null)
             {
                 return NotFound();
             }
-            return Ok(project);
+            return Ok(item);
         }
 
         [HttpPost]
-        public IActionResult AddProject([FromBody] ProjectDto projectDTO)
+        public IActionResult AddWishedItem([FromBody] WishedItemDto wishedItemDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var project = _mapper.Map<Project>(projectDTO);
-            _context.Projects.Add(project);
+            var wishedItem = _mapper.Map<WishedItem>(wishedItemDto);
+            _context.WishedItems.Add(wishedItem);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetProject), new { id = project.Id }, project);
+            return CreatedAtAction(nameof(GetWishedItem), new { id = wishedItem.Id }, wishedItem);
         }
 
         [HttpPut]
-        public IActionResult UpdateProject(int id, [FromBody] ProjectDto projectDTO)
+        public IActionResult UpdateWishedItem(int id, [FromBody] WishedItemDto wishedItemDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var project = _context.Projects.FirstOrDefault(i => i.Id == id);
-            if (project == null)
+            var wishedItem = _context.WishedItems.FirstOrDefault(i => i.Id == id);
+            if (wishedItem == null)
             {
                 return NotFound();
             }
-            _mapper.Map(projectDTO, project);
+            _mapper.Map(wishedItemDto, wishedItem);
             _context.SaveChanges();
-            return Ok(project);
+            return Ok(wishedItem);
         }
 
         [HttpDelete]
-        public IActionResult DeleteProject(int id)
+        public IActionResult DeleteWishedItem(int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var project = _context.Projects.FirstOrDefault(i => i.Id == id);
-            if (project == null)
+            var wishedItem = _context.WishedItems.FirstOrDefault(i => i.Id == id);
+            if (wishedItem == null)
             {
                 return NotFound();
             }
-            _context.Projects.Remove(project);
+            _context.WishedItems.Remove(wishedItem);
             _context.SaveChanges();
             return Ok(new { id = id });
         }

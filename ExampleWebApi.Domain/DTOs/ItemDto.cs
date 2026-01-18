@@ -2,7 +2,7 @@
 
 namespace ExampleWebApi.Domain.DTOs
 {
-    public class ItemDTO
+    public class ItemDto
     {
         [Required]
         public string Name { get; set; }
