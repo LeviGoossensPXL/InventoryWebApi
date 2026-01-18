@@ -90,45 +90,5 @@ namespace ExampleWebApi.Api.Controllers
             _context.SaveChanges();
             return Ok(new { id = id });
         }
-
-        [HttpPost("{id:int}/image")]
-        public async Task<IActionResult> UploadImage(int id, IFormFile image) // TODO use minio for a bucket with these files
-        {
-            if (image == null || image.Length == 0)
-            {
-                return BadRequest("Image is required.");
-            }
-            var item = _context.Items.FirstOrDefault(i => i.Id == id);
-            if (item == null)
-            {
-                throw new KeyNotFoundException($"item with id {id} does not exist.");
-            }
-            using (MemoryStream ms = new MemoryStream())
-            {
-                await image.CopyToAsync(ms);
-                byte[] bytes = ms.ToArray();
-
-                string ext = Path.GetExtension(image.FileName);
-
-                // 1. Bestandsnaam genereren
-                string fileName = $"{Guid.NewGuid()}.{ext.TrimStart('.')}";
-
-                string imagesFolder = Path.Combine(_environment.WebRootPath, "images", "items");
-                // Zorg dat de folder bestaat
-                Directory.CreateDirectory(imagesFolder);
-
-                string filePath = Path.Combine(imagesFolder, fileName);
-
-                // 2. File opslaan
-                await System.IO.File.WriteAllBytesAsync(filePath, bytes);
-
-                // 3. URL opslaan in database (voor de client)
-                // item.Image = $"{Request.Scheme}://{Request.Host}/images/items/{fileName}";
-                _context.SaveChanges();
-
-                // return Ok(item.Image);
-                return Ok();
-            }
-        }
     }
 }
