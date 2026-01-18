@@ -1,31 +1,31 @@
-﻿INSERT INTO "Items" ("Id", "Name", "Brand", "Type")
+﻿INSERT INTO public."Items" ("Id", "Name", "Brand", "Type", "Description")
 VALUES
-(1, '3d printer', 'Prusa', 'CoreOne'),
-(2, 'repair toolkit', 'iFixIt', 'pro tech toolkit'),
-(3, 'monitor arm', 'Alberenz', 'single monitorarm Donkergrijs')
+(1, '3d printer', 'Prusa', 'CoreOne', 'A 3D printer for creating custom objects.'),
+(2, 'repair toolkit', 'iFixIt', 'pro tech toolkit', 'A toolkit for repairing electronics and other tech devices.'),
+(3, 'monitor arm', 'Alberenz', 'single monitorarm Donkergrijs', 'A monitor arm for adjusting the height and angle of your monitor.')
 ON CONFLICT ("Id") DO NOTHING;
 
-INSERT INTO "OwnedItems" ("Id", "OwnerId", "ItemId", "Price", "ImageUrl", "AcquiredAt", "Notes")
+INSERT INTO public."OwnedItems" ("Id", "OwnerId", "ItemId", "Price", "ImageUrl", "AcquiredAt", "Notes")
 VALUES
-(1, 1, 1, 1500.00, 'https://localhost:7027/images/items/b95db868-ecb5-41f1-8f82-5a8bf520ad66.jpg', '4/11/2025', 'can not print in cold tempertature'),
-(2, 2, 2, 77.41, 'https://localhost:7027/images/items/c82af8a4-3662-4734-8453-a4e08197efc6.jpg', '10/09/2025', 'repair most things'),
-(3, 3, 3, 99.00, 'https://localhost:7027/images/items/45690b8f-3173-4e74-be8f-c773612046bb.jpg', '15/09/2025', 'good arm')
+(1, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 1, 1500.00, 'https://localhost:7027/images/items/b95db868-ecb5-41f1-8f82-5a8bf520ad66.jpg', '2025-04-11 00:00:00', 'can not print in cold tempertature'),
+(2, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 2, 77.41, 'https://localhost:7027/images/items/c82af8a4-3662-4734-8453-a4e08197efc6.jpg', '2025-09-10 00:00:00', 'repair most things'),
+(3, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 3, 99.00, 'https://localhost:7027/images/items/45690b8f-3173-4e74-be8f-c773612046bb.jpg', '2025-09-15 00:00:00', 'good arm')
 ON CONFLICT ("Id") DO NOTHING;
 
-INSERT INTO "WishedItems" ("Id", "UserId", "ItemId", "Price", "Priority")
+INSERT INTO public."WishedItems" ("Id", "UserId", "ItemId", "Price", "Priority")
 VALUES
-(1, 1, 1, 1500.00, 1),
-(2, 2, 2, 77.41, 2),
-(3, 3, 3, 99.00, 3)
+(1, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 1, 1500.00, 1),
+(2, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 2, 77.41, 2),
+(3, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 3, 99.00, 3)
 ON CONFLICT ("Id") DO NOTHING;
 
-INSERT INTO "Projects" ("Id", "Name", "Description")
+INSERT INTO public."Projects" ("Id", "Name", "Description")
 VALUES
 (1, 'led cube', 'LEDs in the shape of a cube to display beautiful effects through programming.'),
 (2, 'self balancing cube', 'A cube that can balance itself on its point.')
 ON CONFLICT ("Id") DO NOTHING;
 
-INSERT INTO "Groups" ("Id", "Name", "Description")
+INSERT INTO public."Groups" ("Id", "Name", "Description")
 VALUES
 (1, 'work', 'Items used for work, office tasks, or professional activities'),
 (2, 'home', 'Everyday items used around the house'),
