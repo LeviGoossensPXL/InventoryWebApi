@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace ExampleWebApi.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
+    [AllowAnonymous]
     public class UserController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;

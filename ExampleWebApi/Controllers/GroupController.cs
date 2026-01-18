@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ExampleWebApi.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
+    [AllowAnonymous]
     public class GroupController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;
