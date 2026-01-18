@@ -101,7 +101,7 @@ namespace ExampleWebApi.Api.Controllers
             var ownedItem = _context.OwnedItems.FirstOrDefault(i => i.Id == id);
             if (ownedItem == null)
             {
-                throw new KeyNotFoundException($"item with id {id} does not exist.");
+                throw new KeyNotFoundException($"OwnedItem with id {id} does not exist.");
             }
             using (MemoryStream ms = new MemoryStream())
             {
@@ -123,11 +123,10 @@ namespace ExampleWebApi.Api.Controllers
                 await System.IO.File.WriteAllBytesAsync(filePath, bytes);
 
                 // 3. URL opslaan in database (voor de client)
-                // item.Image = $"{Request.Scheme}://{Request.Host}/images/items/{fileName}";
-                _context.SaveChanges();
+                ownedItem.ImageUrl = $"{Request.Scheme}://{Request.Host}/images/owned_items/{fileName}";
+                await _context.SaveChangesAsync();
 
-                // return Ok(item.Image);
-                return Ok();
+                return Ok(ownedItem.ImageUrl);
             }
         }
     }
