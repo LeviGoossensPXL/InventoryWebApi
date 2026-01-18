@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using ExampleWebApi.Domain.DTOs;
+using ExampleWebApi.Domain.DTOs.Responses;
 using ExampleWebApi.Domain.Entities;
 using ExampleWebApi.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExampleWebApi.Api.Controllers
 {
@@ -23,24 +25,46 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetWishedItems()
+        public async Task<IActionResult> GetWishedItems()
         {
-            return Ok(_context.WishedItems);
+            var dtos = await _context.WishedItems
+                .AsNoTracking()
+                .Select(w => new WishedItemResponseDto
+                {
+                    Id = w.Id,
+                    UserId = w.UserId,
+                    ItemId = w.ItemId,
+                    Price = w.Price,
+                    Priority = w.Priority,
+                    GroupIds = w.GroupWishedItems.Select(g => g.GroupId).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(dtos);
         }
 
+        // GET: api/WishedItems/5
         [HttpGet("{id}")]
-        public IActionResult GetWishedItem(int id)
+        public async Task<IActionResult> GetWishedItem(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var item = _context.WishedItems.FirstOrDefault(i => i.Id == id);
-            if (item == null)
-            {
+            var dto = await _context.WishedItems
+                .AsNoTracking()
+                .Where(w => w.Id == id)
+                .Select(w => new WishedItemResponseDto
+                {
+                    Id = w.Id,
+                    UserId = w.UserId,
+                    ItemId = w.ItemId,
+                    Price = w.Price,
+                    Priority = w.Priority,
+                    GroupIds = w.GroupWishedItems.Select(g => g.GroupId).ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            if (dto == null)
                 return NotFound();
-            }
-            return Ok(item);
+
+            return Ok(dto);
         }
 
         [HttpPost]

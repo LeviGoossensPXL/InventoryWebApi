@@ -17,7 +17,7 @@ namespace ExampleWebApi.Api.Profiles
             CreateMap<Project, ProjectDto>().ReverseMap();
             CreateMap<Group, GroupDto>().ReverseMap();
 
-            CreateMap<User, ResponseUserDto>();
+            CreateMap<User, UserResponseDto>();
         }
     }
 }

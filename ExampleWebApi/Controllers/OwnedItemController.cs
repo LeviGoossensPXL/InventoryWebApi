@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using ExampleWebApi.Domain.DTOs;
+using ExampleWebApi.Domain.DTOs.Responses;
 using ExampleWebApi.Domain.Entities;
 using ExampleWebApi.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExampleWebApi.Api.Controllers
 {
@@ -25,22 +27,47 @@ namespace ExampleWebApi.Api.Controllers
         [HttpGet]
         public IActionResult GetOwnedItems()
         {
-            return Ok(_context.OwnedItems);
+            var dtos = _context.OwnedItems
+                .AsNoTracking()
+                .Select(o => new OwnedItemResponseDto
+                {
+                    Id = o.Id,
+                    OwnerId = o.OwnerId,
+                    ItemId = o.ItemId,
+                    Price = o.Price,
+                    ImageUrl = o.ImageUrl,
+                    AcquiredAt = o.AcquiredAt,
+                    Notes = o.Notes,
+                    GroupIds = o.GroupOwnedItems.Select(g => g.GroupId).ToList()
+                })
+                .ToList();
+
+            return Ok(dtos);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetOwnedItem(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var ownedItem = _context.OwnedItems.FirstOrDefault(i => i.Id == id);
-            if (ownedItem == null)
-            {
+            var dto = _context.OwnedItems
+                .AsNoTracking()
+                .Where(o => o.Id == id)
+                .Select(o => new OwnedItemResponseDto
+                {
+                    Id = o.Id,
+                    OwnerId = o.OwnerId,
+                    ItemId = o.ItemId,
+                    Price = o.Price,
+                    ImageUrl = o.ImageUrl,
+                    AcquiredAt = o.AcquiredAt,
+                    Notes = o.Notes,
+                    GroupIds = o.GroupOwnedItems.Select(g => g.GroupId).ToList()
+                })
+                .FirstOrDefault();
+
+            if (dto == null)
                 return NotFound();
-            }
-            return Ok(ownedItem);
+
+            return Ok(dto);
         }
 
         [HttpPost]

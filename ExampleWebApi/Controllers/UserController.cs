@@ -25,7 +25,7 @@ namespace ExampleWebApi.Api.Controllers
         [HttpGet]
         public IActionResult GetUsers()
         {
-            return Ok(_mapper.Map<IEnumerable<User>, IEnumerable<ResponseUserDto>>(_context.Users.AsEnumerable()));
+            return Ok(_mapper.Map<IEnumerable<User>, IEnumerable<UserResponseDto>>(_context.Users.AsEnumerable()));
         }
 
         [HttpGet("{id}")]
@@ -40,7 +40,7 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<ResponseUserDto>(user));
+            return Ok(_mapper.Map<UserResponseDto>(user));
         }
 
         // [HttpPost]
