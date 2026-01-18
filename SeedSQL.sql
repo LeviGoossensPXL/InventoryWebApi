@@ -1,5 +1,4 @@
-﻿
-INSERT INTO "Items" ("Id", "Name", "Brand", "Type")
+﻿INSERT INTO "Items" ("Id", "Name", "Brand", "Type")
 VALUES
 (1, '3d printer', 'Prusa', 'CoreOne'),
 (2, 'repair toolkit', 'iFixIt', 'pro tech toolkit'),
@@ -22,8 +21,8 @@ ON CONFLICT ("Id") DO NOTHING;
 
 INSERT INTO "Projects" ("Id", "Name", "Description")
 VALUES
-(1, 'led cube', 'leds in de vorm van een kubus om mooie effect te tonen door programmatie'),
-(2, 'self balancing cube', 'een kubus die zich zelf kan balanceren op zijn punt')
+(1, 'led cube', 'LEDs in the shape of a cube to display beautiful effects through programming.'),
+(2, 'self balancing cube', 'A cube that can balance itself on its point.')
 ON CONFLICT ("Id") DO NOTHING;
 
 INSERT INTO "Groups" ("Id", "Name", "Description")
@@ -35,7 +34,7 @@ VALUES
 (5, 'other', 'Items that do not fit into any specific category')
 ON CONFLICT ("Id") DO NOTHING;
 
-INSERT INTO "Users" ("Id", "NickName", "UserName", "NormalizedUserName", "Email", "NormalizedEmail", "EmailConfirmed", "PasswordHash", "SecurityStamp", "ConcurrencyStamp", "PhoneNumber", "PhoneNumberConfirmed", "TwoFactorEnabled", "LockoutEnd", "LockoutEnabled", "AccessFailedCount") 
+INSERT INTO "Users" ("Id", "NickName", "UserName", "NormalizedUserName", "Email", "NormalizedEmail", "EmailConfirmed", "PasswordHash", "SecurityStamp", "ConcurrencyStamp", "PhoneNumber", "PhoneNumberConfirmed", "TwoFactorEnabled", "LockoutEnd", "LockoutEnabled", "AccessFailedCount")
 VALUES
 ('94b0b023-915b-46e7-a551-f9fb1279b4dd', 'levi', 'levi1@gmail.com', 'LEVI1@GMAIL.COM', 'levi1@gmail.com', 'LEVI1@GMAIL.COM', false, 'AQAAAAIAAYagAAAAELzenAoyMUeutldQP6UUVuvdrYt3u9oMH9FzBhUOVkauC0kQmVKcINmlE8wapJBwWQ==', 'OFPPL4MARKQZSNUWZC2VVUMH4MURTPUK', 'b3cf1744-b53c-4b24-8fc4-62215a1b9d82', null, false, false, null, true, 0),
 -- password: levi100
