@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace ExampleWebApi.Domain.DTOs
 {
-    public class UserDTO
+    public class ResponseUserDTO
     {
         public string NickName { get; set; }
+        
+        public string Email { get; set; }
+        
+        public string? PhoneNumber { get; set; }
     }
 }

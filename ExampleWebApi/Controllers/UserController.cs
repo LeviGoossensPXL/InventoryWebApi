@@ -25,7 +25,7 @@ namespace ExampleWebApi.Api.Controllers
         [HttpGet]
         public IActionResult GetUsers()
         {
-            return Ok(_context.Users);
+            return Ok(_mapper.Map<IEnumerable<User>, IEnumerable<ResponseUserDTO>>(_context.Users.AsEnumerable()));
         }
 
         [HttpGet("{id}")]
@@ -40,38 +40,38 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return NotFound();
             }
-            return Ok(user);
+            return Ok(_mapper.Map<ResponseUserDTO>(user));
         }
 
-        [HttpPost]
-        public IActionResult AddUser([FromBody] UserDTO userDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var user = _mapper.Map<User>(userDTO);
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
-        }
+        // [HttpPost]
+        // public IActionResult AddUser([FromBody] UserDTO userDTO)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+        //     var user = _mapper.Map<User>(userDTO);
+        //     _context.Users.Add(user);
+        //     _context.SaveChanges();
+        //     return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+        // }
 
-        [HttpPut]
-        public IActionResult UpdateUser(Guid id, [FromBody] UserDTO userDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var user = _context.Users.FirstOrDefault(i => i.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            _mapper.Map(userDTO, user);
-            _context.SaveChanges();
-            return Ok(user);
-        }
+        // [HttpPut]
+        // public IActionResult UpdateUser(Guid id, [FromBody] UserDTO userDTO)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+        //     var user = _context.Users.FirstOrDefault(i => i.Id == id);
+        //     if (user == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     _mapper.Map(userDTO, user);
+        //     _context.SaveChanges();
+        //     return Ok(user);
+        // }
 
         [HttpDelete]
         public IActionResult DeleteUser(Guid id)
