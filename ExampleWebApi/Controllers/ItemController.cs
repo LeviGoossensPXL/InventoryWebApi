@@ -92,7 +92,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPost("{id:int}/image")]
-        public async Task<IActionResult> UploadImage(int id, IFormFile image)
+        public async Task<IActionResult> UploadImage(int id, IFormFile image) // TODO use minio for a bucket with these files
         {
             if (image == null || image.Length == 0)
             {
