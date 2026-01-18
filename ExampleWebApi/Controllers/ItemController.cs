@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using ExampleWebApi.Domain.DTOs;
+using ExampleWebApi.Domain.DTOs.Responses;
 using ExampleWebApi.Domain.Entities;
 using ExampleWebApi.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExampleWebApi.Api.Controllers
 {
@@ -25,7 +27,31 @@ namespace ExampleWebApi.Api.Controllers
         [HttpGet]
         public IActionResult GetItems()
         {
-            return Ok(_context.Items);
+            var items = _context.Items
+                .Include(item => item.OwnedItems)
+                .Include(item => item.WishedItems)
+                .Include(item => item.ProjectItems)
+                .ToList();
+            
+            var dtoList = items.Select(item => new ItemResponseDto
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Brand = item.Brand,
+                Type = item.Type,
+                Description = item.Description,
+                OwnedItemIds = item.OwnedItems
+                    .Select(oi => oi.Id)
+                    .ToList(),
+                WishedItemIds = item.WishedItems
+                    .Select(wi => wi.Id)
+                    .ToList(),
+                ProjectItemIds = item.ProjectItems
+                    .Select(pi => pi.ProjectId)
+                    .ToList()
+            }).ToList();
+            
+            return Ok(dtoList);
         }
 
         [HttpGet("{id}")]
@@ -35,12 +61,26 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var item = _context.Items.FirstOrDefault(i => i.Id == id);
+            var item = _context.Items
+                .Include(item => item.OwnedItems)
+                .Include(item => item.WishedItems)
+                .Include(item => item.ProjectItems)
+                .FirstOrDefault(i => i.Id == id);
             if (item == null)
             {
                 return NotFound();
             }
-            return Ok(item);
+            return Ok(new ItemResponseDto
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Brand = item.Brand,
+                Type = item.Type,
+                Description = item.Description,
+                OwnedItemIds = item.OwnedItems.Select(oi => oi.Id).ToList(),
+                WishedItemIds = item.WishedItems.Select(wi => wi.Id).ToList(),
+                ProjectItemIds = item.ProjectItems.Select(pi => pi.ProjectId).ToList()
+            });
         }
 
         [HttpPost]
