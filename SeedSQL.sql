@@ -27,7 +27,7 @@ SET search_path TO public;
 
 
 --region seed data
-INSERT INTO "Items" ("Id", "Name", "Brand", "Type", "Description")
+INSERT INTO "VoidItems" ("Id", "Name", "Brand", "Type", "Description")
 VALUES
 (1, '3d printer', 'Prusa', 'CoreOne', 'A 3D printer for creating custom objects.'),
 (2, 'repair toolkit', 'iFixIt', 'pro tech toolkit', 'Dont replace, repair!'),
@@ -56,22 +56,22 @@ VALUES
 (21, 'Multimeter', 'Fluke', '117', 'For measuring voltage, current, and resistance')
 ON CONFLICT ("Id") DO NOTHING;
 SELECT setval(pg_get_serial_sequence('"Items"', 'Id'),
-              (SELECT MAX("Id") FROM "Items"));
+              (SELECT MAX("Id") FROM "VoidItems"));
 
-INSERT INTO "OwnedItems" ("Id", "OwnerId", "ItemId", "Price", "ImageUrl", "AcquiredAt", "Notes")
+INSERT INTO "OwnedItems" ("Id", "Name", "Brand", "Type", "Description", "OwnerId", "Price", "ImageUrl", "AcquiredAt", "Notes")
 VALUES
-(1, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 1, 1500.00, 'https://localhost:7027/images/items/b95db868-ecb5-41f1-8f82-5a8bf520ad66.jpg', '2025-04-11 00:00:00', 'can not print in cold tempertature'),
-(2, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 2, 77.41, 'https://localhost:7027/images/items/c82af8a4-3662-4734-8453-a4e08197efc6.jpg', '2025-09-10 00:00:00', 'repair most things'),
-(3, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 3, 99.00, 'https://localhost:7027/images/items/45690b8f-3173-4e74-be8f-c773612046bb.jpg', '2025-09-15 00:00:00', 'good arm')
+(1, 'repair toolkit', 'iFixIt', 'pro tech toolkit', 'Dont replace, repair!','94b0b023-915b-46e7-a551-f9fb1279b4dd', 1500.00, 'https://localhost:7027/images/items/b95db868-ecb5-41f1-8f82-5a8bf520ad66.jpg', '2025-04-11 00:00:00', 'can not print in cold tempertature'),
+(2, 'repair toolkit', 'iFixIt', 'pro tech toolkit', 'Dont replace, repair!', '94b0b023-915b-46e7-a551-f9fb1279b4dd', 77.41, 'https://localhost:7027/images/items/c82af8a4-3662-4734-8453-a4e08197efc6.jpg', '2025-09-10 00:00:00', 'repair most things'),
+(3, 'monitor arm', 'Alberenz', 'single monitorarm Donkergrijs', 'hold your monitor and move it more freely', '94b0b023-915b-46e7-a551-f9fb1279b4dd', 99.00, 'https://localhost:7027/images/items/45690b8f-3173-4e74-be8f-c773612046bb.jpg', '2025-09-15 00:00:00', 'good arm')
 ON CONFLICT ("Id") DO NOTHING;
 SELECT setval(pg_get_serial_sequence('"OwnedItems"', 'Id'),
               (SELECT MAX("Id") FROM "OwnedItems"));
 
-INSERT INTO "WishedItems" ("Id", "UserId", "ItemId", "Price", "Priority")
+INSERT INTO "WishedItems" ("Id", "Name", "Brand", "Type", "Description", "UserId", "Price", "Priority")
 VALUES
-(1, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 1, 1500.00, 1),
-(2, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 2, 80.41, 2),
-(3, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 3, 102.00, 3)
+(1, '3d printer', 'Prusa', 'CoreOne', 'A 3D printer for creating custom objects.', '94b0b023-915b-46e7-a551-f9fb1279b4dd', 1500.00, 1),
+(2, 'repair toolkit', 'iFixIt', 'pro tech toolkit', 'Dont replace, repair!', '94b0b023-915b-46e7-a551-f9fb1279b4dd', 80.41, 2),
+(3, 'monitor arm', 'Alberenz', 'single monitorarm Donkergrijs', 'hold your monitor and move it more freely', '94b0b023-915b-46e7-a551-f9fb1279b4dd', 102.00, 3)
 ON CONFLICT ("Id") DO NOTHING;
 SELECT setval(pg_get_serial_sequence('"WishedItems"', 'Id'),
               (SELECT MAX("Id") FROM "WishedItems"));
