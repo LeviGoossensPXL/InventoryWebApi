@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace ExampleWebApi.Domain.Entities
 {
-    public abstract class Item
+    public class VoidItem
     {
+        public int Id { get; set; }
+        public ICollection<ProjectItem> ProjectItems { get; set; } = new List<ProjectItem>();
         public string Name { get; set; }
         public string Brand { get; set; }
         public string Type { get; set; }

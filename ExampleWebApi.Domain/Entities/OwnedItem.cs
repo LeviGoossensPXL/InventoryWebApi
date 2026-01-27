@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace ExampleWebApi.Domain.Entities
 {
-    public class OwnedItem
+    public class OwnedItem : Item
     {
         public int Id { get; set; }
         public Guid OwnerId { get; set; }
         public User Owner { get; set; }
-        public int ItemId { get; set; }
-        public Item Item { get; set; }
 
         public ICollection<GroupOwnedItem> GroupOwnedItems { get; set; } = [];
 

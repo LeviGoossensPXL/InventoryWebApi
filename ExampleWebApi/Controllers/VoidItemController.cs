@@ -11,13 +11,13 @@ namespace ExampleWebApi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemController : ApiControllerBase
+    public class VoidItemController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _environment;
 
-        public ItemController(ExampleDbContext context, IMapper mapper, IWebHostEnvironment environment)
+        public VoidItemController(ExampleDbContext context, IMapper mapper, IWebHostEnvironment environment)
         {
             this._context = context;
             this._mapper = mapper;
@@ -27,9 +27,7 @@ namespace ExampleWebApi.Api.Controllers
         [HttpGet]
         public IActionResult GetItems()
         {
-            var items = _context.Items
-                .Include(item => item.OwnedItems)
-                .Include(item => item.WishedItems)
+            var items = _context.VoidItems
                 .Include(item => item.ProjectItems)
                 .ToList();
             
@@ -40,12 +38,6 @@ namespace ExampleWebApi.Api.Controllers
                 Brand = item.Brand,
                 Type = item.Type,
                 Description = item.Description,
-                OwnedItemIds = item.OwnedItems
-                    .Select(oi => oi.Id)
-                    .ToList(),
-                WishedItemIds = item.WishedItems
-                    .Select(wi => wi.Id)
-                    .ToList(),
                 ProjectItemIds = item.ProjectItems
                     .Select(pi => pi.ProjectId)
                     .ToList()
@@ -61,9 +53,7 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var item = _context.Items
-                .Include(item => item.OwnedItems)
-                .Include(item => item.WishedItems)
+            var item = _context.VoidItems
                 .Include(item => item.ProjectItems)
                 .FirstOrDefault(i => i.Id == id);
             if (item == null)
@@ -77,8 +67,6 @@ namespace ExampleWebApi.Api.Controllers
                 Brand = item.Brand,
                 Type = item.Type,
                 Description = item.Description,
-                OwnedItemIds = item.OwnedItems.Select(oi => oi.Id).ToList(),
-                WishedItemIds = item.WishedItems.Select(wi => wi.Id).ToList(),
                 ProjectItemIds = item.ProjectItems.Select(pi => pi.ProjectId).ToList()
             });
         }
@@ -90,8 +78,8 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var item = _mapper.Map<Item>(itemDTO);
-            _context.Items.Add(item);
+            var item = _mapper.Map<VoidItem>(itemDTO);
+            _context.VoidItems.Add(item);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
         }
@@ -103,7 +91,7 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var item = _context.Items.FirstOrDefault(i => i.Id == id);
+            var item = _context.VoidItems.FirstOrDefault(i => i.Id == id);
             if (item == null)
             {
                 return NotFound();
@@ -120,12 +108,12 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var item = _context.Items.FirstOrDefault(i => i.Id == id);
+            var item = _context.VoidItems.FirstOrDefault(i => i.Id == id);
             if (item == null)
             {
                 return NotFound();
             }
-            _context.Items.Remove(item);
+            _context.VoidItems.Remove(item);
             _context.SaveChanges();
             return Ok(new { id = id });
         }

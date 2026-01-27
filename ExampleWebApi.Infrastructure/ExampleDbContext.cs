@@ -28,7 +28,7 @@ namespace ExampleWebApi.Infrastructure
             builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
             builder.Entity<IdentityUserLogin<Guid>>().ToTable("ExternalLogins");
             builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
-            builder.Entity<ProjectItem>().HasKey(pi => new { pi.ProjectId, pi.ItemId });
+            builder.Entity<ProjectItem>().HasKey(pi => new { pi.ProjectId, pi.VoidItemId });
             builder.Entity<GroupOwnedItem>().HasKey(gi => new { gi.GroupId, gi.OwnedItemId });
             builder.Entity<GroupWishedItem>().HasKey(gi => new { gi.GroupId, gi.WishedItemId });
             builder.Entity<GroupProject>().HasKey(gi => new { gi.GroupId, gi.ProjectId });
@@ -37,7 +37,7 @@ namespace ExampleWebApi.Infrastructure
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectItem> ProjectItems { get; set; }
-        public DbSet<Item> Items { get; set; }
+        public DbSet<VoidItem> VoidItems { get; set; }
         public DbSet<OwnedItem> OwnedItems { get; set; }
         public DbSet<WishedItem> WishedItems { get; set; }
 

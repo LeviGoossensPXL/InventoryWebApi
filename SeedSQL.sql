@@ -30,8 +30,8 @@ SET search_path TO public;
 INSERT INTO "Items" ("Id", "Name", "Brand", "Type", "Description")
 VALUES
 (1, '3d printer', 'Prusa', 'CoreOne', 'A 3D printer for creating custom objects.'),
-(2, 'repair toolkit', 'iFixIt', 'pro tech toolkit', 'A toolkit for repairing electronics and other tech devices.'),
-(3, 'monitor arm', 'Alberenz', 'single monitorarm Donkergrijs', 'A monitor arm for adjusting the height and angle of your monitor.'),
+(2, 'repair toolkit', 'iFixIt', 'pro tech toolkit', 'Dont replace, repair!'),
+(3, 'monitor arm', 'Alberenz', 'single monitorarm Donkergrijs', 'hold your monitor and move it more freely'),
 
 -- AI gen
 (4, 'Laptop', 'Dell', 'XPS 15', 'Used for work and computing tasks'),
@@ -70,8 +70,8 @@ SELECT setval(pg_get_serial_sequence('"OwnedItems"', 'Id'),
 INSERT INTO "WishedItems" ("Id", "UserId", "ItemId", "Price", "Priority")
 VALUES
 (1, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 1, 1500.00, 1),
-(2, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 2, 77.41, 2),
-(3, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 3, 99.00, 3)
+(2, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 2, 80.41, 2),
+(3, '94b0b023-915b-46e7-a551-f9fb1279b4dd', 3, 102.00, 3)
 ON CONFLICT ("Id") DO NOTHING;
 SELECT setval(pg_get_serial_sequence('"WishedItems"', 'Id'),
               (SELECT MAX("Id") FROM "WishedItems"));

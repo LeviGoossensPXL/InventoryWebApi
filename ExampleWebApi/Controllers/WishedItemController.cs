@@ -33,7 +33,6 @@ namespace ExampleWebApi.Api.Controllers
                 {
                     Id = w.Id,
                     UserId = w.UserId,
-                    ItemId = w.ItemId,
                     Price = w.Price,
                     Priority = w.Priority,
                     GroupIds = w.GroupWishedItems.Select(g => g.GroupId).ToList()
@@ -54,7 +53,6 @@ namespace ExampleWebApi.Api.Controllers
                 {
                     Id = w.Id,
                     UserId = w.UserId,
-                    ItemId = w.ItemId,
                     Price = w.Price,
                     Priority = w.Priority,
                     GroupIds = w.GroupWishedItems.Select(g => g.GroupId).ToList()

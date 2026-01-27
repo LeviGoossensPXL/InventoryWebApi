@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace ExampleWebApi.Domain.Entities
 {
-    public class WishedItem
+    public class WishedItem : Item
     {
         public int Id { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
-        public int ItemId { get; set; }
-        public Item Item { get; set; }
 
         public ICollection<GroupWishedItem> GroupWishedItems { get; set; } = [];
 

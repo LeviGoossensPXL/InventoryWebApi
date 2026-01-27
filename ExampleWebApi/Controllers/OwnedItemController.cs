@@ -33,7 +33,6 @@ namespace ExampleWebApi.Api.Controllers
                 {
                     Id = o.Id,
                     OwnerId = o.OwnerId,
-                    ItemId = o.ItemId,
                     Price = o.Price,
                     ImageUrl = o.ImageUrl,
                     AcquiredAt = o.AcquiredAt,
@@ -55,7 +54,6 @@ namespace ExampleWebApi.Api.Controllers
                 {
                     Id = o.Id,
                     OwnerId = o.OwnerId,
-                    ItemId = o.ItemId,
                     Price = o.Price,
                     ImageUrl = o.ImageUrl,
                     AcquiredAt = o.AcquiredAt,

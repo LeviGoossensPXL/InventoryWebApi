@@ -36,7 +36,7 @@ namespace ExampleWebApi.Api.Controllers
                     Name = p.Name,
                     Description = p.Description,
                     ItemIds = p.ProjectItems
-                        .Select(pi => pi.ItemId)
+                        .Select(pi => pi.VoidItemId)
                         .ToList(),
                     GroupIds = p.GroupProjects
                         .Select(gp => gp.GroupId)
@@ -60,7 +60,7 @@ namespace ExampleWebApi.Api.Controllers
                     Name = p.Name,
                     Description = p.Description,
                     ItemIds = p.ProjectItems
-                        .Select(pi => pi.ItemId)
+                        .Select(pi => pi.VoidItemId)
                         .ToList(),
                     GroupIds = p.GroupProjects
                         .Select(gp => gp.GroupId)
@@ -101,7 +101,7 @@ namespace ExampleWebApi.Api.Controllers
                 return NotFound(new {message = "Project not found", projectId = id });
             }
             
-            var selectedItems = await _context.Items.
+            var selectedItems = await _context.VoidItems.
                 Where(i => addItemsToProjectDto.ItemIds.Contains(i.Id))
                 .ToListAsync();
             if (selectedItems.Count() != addItemsToProjectDto.ItemIds.Count())
@@ -110,14 +110,14 @@ namespace ExampleWebApi.Api.Controllers
             }
             
             var existingItems = await _context.ProjectItems
-                .Where(pi => pi.ProjectId == id && addItemsToProjectDto.ItemIds.Contains(pi.ItemId))
+                .Where(pi => pi.ProjectId == id && addItemsToProjectDto.ItemIds.Contains(pi.VoidItemId))
                 .ToListAsync();
             if (existingItems.Any())
             {
-                return BadRequest(new { message = "Items already exist on this project", itemIds = existingItems.Select(e => e.ItemId) });
+                return BadRequest(new { message = "Items already exist on this project", itemIds = existingItems.Select(e => e.VoidItemId) });
             }
             
-            var projectItems = selectedItems.Select(i => new ProjectItem { ProjectId = project.Id, ItemId = i.Id });
+            var projectItems = selectedItems.Select(i => new ProjectItem { ProjectId = project.Id, VoidItemId = i.Id });
             await _context.ProjectItems.AddRangeAsync(projectItems);
             await _context.SaveChangesAsync();
             
