@@ -5,7 +5,10 @@ public class OwnedItemResponseDto
     public int Id { get; init; }
 
     public Guid OwnerId { get; init; }
-    public int ItemId { get; init; }
+    public string Name { get; set; }
+    public string Brand { get; set; }
+    public string Type { get; set; }
+    public string Description { get; set; }
 
     public decimal? Price { get; init; }
     public string? ImageUrl { get; init; }

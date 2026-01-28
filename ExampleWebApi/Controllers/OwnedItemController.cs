@@ -32,6 +32,10 @@ namespace ExampleWebApi.Api.Controllers
                 .Select(o => new OwnedItemResponseDto
                 {
                     Id = o.Id,
+                    Name = o.Name,
+                    Brand = o.Brand,
+                    Type = o.Type,
+                    Description = o.Description,
                     OwnerId = o.OwnerId,
                     Price = o.Price,
                     ImageUrl = o.ImageUrl,
@@ -53,7 +57,12 @@ namespace ExampleWebApi.Api.Controllers
                 .Select(o => new OwnedItemResponseDto
                 {
                     Id = o.Id,
+                    Name = o.Name,
+                    Brand = o.Brand,
+                    Type = o.Type,
+                    Description = o.Description,
                     OwnerId = o.OwnerId,
+                    
                     Price = o.Price,
                     ImageUrl = o.ImageUrl,
                     AcquiredAt = o.AcquiredAt,
