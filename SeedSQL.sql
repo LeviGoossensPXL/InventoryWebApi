@@ -63,7 +63,7 @@ VALUES
 (1, 'repair toolkit', 'iFixIt', 'pro tech toolkit', 'Dont replace, repair!','94b0b023-915b-46e7-a551-f9fb1279b4dd', 1500.00, 'https://localhost:7027/images/items/b95db868-ecb5-41f1-8f82-5a8bf520ad66.jpg', '2025-04-11 20:36:32', 'can not print in cold tempertature'),
 (2, 'repair toolkit', 'iFixIt', 'pro tech toolkit', 'Dont replace, repair!', '94b0b023-915b-46e7-a551-f9fb1279b4dd', 77.41, 'https://localhost:7027/images/items/c82af8a4-3662-4734-8453-a4e08197efc6.jpg', '2025-09-10 00:32:07', 'repair most things'),
 (3, 'monitor arm', 'Alberenz', 'single monitorarm Donkergrijs', 'hold your monitor and move it more freely', '94b0b023-915b-46e7-a551-f9fb1279b4dd', 99.00, 'https://localhost:7027/images/items/45690b8f-3173-4e74-be8f-c773612046bb.jpg', '2025-09-15 14:58:03', 'good arm'),
-(3, 'monitor arm', 'Alberenz', 'single monitorarm Donkergrijs', 'hold your monitor and move it more freely', '94b0b023-915b-46e7-a551-f9fb1279b4dd', 99.00, 'https://localhost:7027/images/items/45690b8f-3173-4e74-be8f-c773612046bb.jpg', '2025-09-25 15:33:03', 'damaged always droping under a tiny amount of weight')
+(4, 'monitor arm', 'Alberenz', 'single monitorarm Donkergrijs', 'hold your monitor and move it more freely', '94b0b023-915b-46e7-a551-f9fb1279b4dd', 99.00, 'https://localhost:7027/images/items/45690b8f-3173-4e74-be8f-c773612046bb.jpg', '2025-09-25 15:33:03', 'damaged always droping under a tiny amount of weight')
 ON CONFLICT ("Id") DO NOTHING;
 SELECT setval(pg_get_serial_sequence('"OwnedItems"', 'Id'),
               (SELECT MAX("Id") FROM "OwnedItems"));
