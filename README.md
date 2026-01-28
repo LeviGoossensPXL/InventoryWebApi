@@ -10,7 +10,14 @@ Can be used with a .NET MAUI application where the JWT token can be fetched and 
 
 
 # Steps to get up-and-running
-1. In _appsettings.json_ (`ExampleWebApi.Api`) make sure the connectionstring is correct for your (local) database. The example project uses the EF SQLServer package. 
+1. use following command in the root of the project
+   ```shell
+    docker compose up -d --build
+   ```
+
+
+
+1. In _appsettings.json_ (`ExampleWebApi.Api`) make sure the connectionstring is correct for the **postgress** database.
 
 2. Add a migration and update your database:
     - In the Package Manager Console (PMC) set `ExampleWebApi.Infrastructure` as the 'Default Project' 
@@ -25,4 +32,10 @@ Can be used with a .NET MAUI application where the JWT token can be fetched and 
     - Use this token in the authentication header of your next requests. In Swagger: click Authorize on top of the page. Fill in `Bearer <paste_the_copied_token>`, **important**: there is a space after `Bearer`.
     - The `/testauth` route now works (and prints out you unique user_id)
 
- 
+ # Referentie
+ - repo maui: `https://github.com/LeviGoossensPXL/Inventory-maui.git`
+ - repo API: `https://github.com/LeviGoossensPXL/InventoryWebApi.git`
+ - `(repo)maui-(branch)final1` matches `(repo)API-(branch)final1`
+ - `maui-main` matches `API-main`
+ - only difference on `maui-main` from `CsMobileAssignment-main` is bug fixing and features duplicated from other parts in the app.
+ - `maui-final1` is prepartion for a redo of this assignment
