@@ -11,6 +11,7 @@ namespace ExampleWebApi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OwnedItemController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;

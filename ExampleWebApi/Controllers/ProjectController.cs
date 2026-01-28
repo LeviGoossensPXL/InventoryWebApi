@@ -12,6 +12,7 @@ namespace ExampleWebApi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProjectController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;

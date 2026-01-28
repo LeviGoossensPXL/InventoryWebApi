@@ -10,6 +10,7 @@ namespace ExampleWebApi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;
