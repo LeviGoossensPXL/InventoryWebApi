@@ -223,7 +223,7 @@ package "MauiApp.Pages" {
     class GroupCreatePage
     class GroupDetailPage
     class GroupEditPage
-    ' group specfic
+    ' group specific
     class GroupAddProjectPage
     class GroupAddItemPage
     class GroupAddUserPage
@@ -239,7 +239,7 @@ package "MauiApp.Pages" {
     class ProjectCreatePage
     class ProjectDetailPage
     class ProjectEditPage
-    ' project specfic
+    ' project specific
     class ProjectAddProjectItemPage
     class ProjectAddItemPage
     
@@ -248,7 +248,7 @@ package "MauiApp.Pages" {
     class UserCreatePage
     class UserDetailPage
     class UserEditPage
-    ' user specfic
+    ' user specific
     class SignInPage
     
     ' general
@@ -258,22 +258,56 @@ package "MauiApp.Pages" {
 
 package "MauiApp.Repositories" {
     ' group
-    interface IGroupRepository
+    +interface IGroupRepository {
+        +Task<List<Group>> GetAll()
+        +Task<Group?> Get(int id)
+        +Task<Group> Add(Group group)
+        +Task<Group?> Update(Group group)
+        +Task<bool> Delete(int id)
+        == specific ==
+        +Task<bool> AddProject(int projectId)
+        +Task<bool> AddProject(int itemId)
+        +Task<bool> AddProject(Guid userId)
+    }
     class ApiGroupRepository
     class FakeGroupRepository
     
     ' item
-    interface IItemRepository
+    +interface IItemRepository {
+        +Task<List<Item>> GetAll()
+        +Task<Item?> Get(int id)
+        +Task<Item> Add(Item item)
+        +Task<Item?> Update(Item item)
+        +Task<bool> Delete(int id)
+    }
     class ApiItemRepository
     class FakeItemRepository
     
     ' project
-    interface IProjectRepository
+    +interface IProjectRepository {
+        +Task<List<Project>> GetAll()
+        +Task<Project?> Get(int id)
+        +Task<Project> Add(Project project)
+        +Task<Project?> Update(Project project)
+        +Task<bool> Delete(int id)
+        == specific ==
+        +Task<bool> AddProjectItem(int projectId)
+        +Task<bool> AddItem(int itemId)
+    }
+    note right of IProjectRepository::AddItem
+        Add item and link with current project
+    end note
     class ApiProjectRepository
     class FakeProjectRepository
     
     ' user
-    interface IUserRepository
+    +interface IUserRepository {
+        +Task<List<User>> GetAll()
+        +Task<User?> Get(int id)
+        +Task<User> Add(User user)
+        +Task<User?> Update(User user)
+        +Task<bool> Delete(int id)
+    }
     class ApiUserRepository
     class FakeUserRepository
 }
@@ -292,25 +326,59 @@ package "MauiApp.Services" {
 
 package "MauiApp.ViewModels" {
     ' group
-    class GroupListViewModel
-    class GroupCreateViewModel
-    class GroupDetailViewModel
-    class GroupEditlViewModel
+    +class GroupListViewModel <ObservableObject> {
+        +ObservableCollection<Group> Groups
+        -IGroupRepository _repo
+        +void GroupListViewModel(IGroupRepository repo)
+        -Task SwipeDownRefreshAsync()
+        -Task RefreshAsync()
+    }
+    +class GroupCreateViewModel <ObservableObject> {
+        -[ObservableProperty]Group group
+        -IGroupRepository _repo
+        +void GroupCreateViewModel(IGroupRepository repo)
+    }
+    +class GroupDetailViewModel <ObservableObject> {
+        -IGroupRepository _repo
+        +void GroupDetailViewModel(IGroupRepository repo)
+    }
+    +class GroupEditViewModel <ObservableObject> {
+        -IGroupRepository _repo
+        +void GroupEditViewModel(IGroupRepository repo)
+    }
     
     ' item
-    class ItemListViewModel
+    +class ItemListViewModel <ObservableObject> {
+        +ObservableCollection<Item> Items
+        -IItemRepository _repo
+        +void ItemListViewModel(IItemRepository repo)
+        -Task SwipeDownRefreshAsync()
+        -Task RefreshAsync()
+    }
     class ItemCreateViewModel
     class ItemDetailViewModel
     class ItemEditViewModel
     
     ' project
-    class ProjectListViewModel
+    +class ProjectListViewModel <ObservableObject> {
+        +ObservableCollection<Project> Projects
+        -IProjectRepository _repo
+        +void ProjectListViewModel(IProjectRepository repo)
+        -Task SwipeDownRefreshAsync()
+        -Task RefreshAsync()
+    }
     class ProjectCreateViewModel
     class ProjectDetailViewModel
     class ProjectEditViewModel
     
     ' user
-    class UserListViewModel
+    +class UserListViewModel <ObservableObject> {
+        +ObservableCollection<User> Users
+        -IUserRepository _repo
+        +void UserListViewModel(IUserRepository repo)
+        -Task SwipeDownRefreshAsync()
+        -Task RefreshAsync()
+    }
     class UserCreateViewModel
     class UserDetailViewModel
     class UserEditViewModel
