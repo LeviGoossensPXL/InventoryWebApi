@@ -76,7 +76,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProject([FromBody] ProjectDto projectDto)
+        public async Task<IActionResult> AddProject([FromBody] ProjectDTO projectDto)
         {
             if (!ModelState.IsValid)
             {
@@ -126,7 +126,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateProject(int id, [FromBody] ProjectDto projectDto)
+        public async Task<IActionResult> UpdateProject(int id, [FromBody] ProjectDTO projectDto)
         {
             if (!ModelState.IsValid)
             {

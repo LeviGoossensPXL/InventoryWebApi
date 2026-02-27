@@ -14,7 +14,7 @@ namespace ExampleWebApi.Api.Profiles
             CreateMap<WishedItem, WishedItemDto>().ReverseMap();
             CreateMap<OwnedItem, OwnedItemDto>().ReverseMap();
             
-            CreateMap<Project, ProjectDto>().ReverseMap();
+            CreateMap<Project, ProjectDTO>().ReverseMap();
             CreateMap<Group, GroupDto>().ReverseMap();
 
             CreateMap<User, UserResponseDto>();

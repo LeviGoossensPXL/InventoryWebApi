@@ -1,4 +1,4 @@
-﻿--region remove all data
+--region remove all data
 truncate table 
     "GroupProjects",
     "RoleClaims",
@@ -77,6 +77,9 @@ ON CONFLICT ("Id") DO NOTHING;
 SELECT setval(pg_get_serial_sequence('"WishedItems"', 'Id'),
               (SELECT MAX("Id") FROM "WishedItems"));
 
+-- =========================
+-- PROJECTS
+-- =========================
 INSERT INTO "Projects" ("Id", "Name", "Description")
 VALUES
 (1, 'led cube', 'LEDs in the shape of a cube to display beautiful effects through programming.'),
@@ -91,12 +94,16 @@ ON CONFLICT ("Id") DO NOTHING;
 SELECT setval(pg_get_serial_sequence('"Projects"', 'Id'),
               (SELECT MAX("Id") FROM "Projects"));
 
+-- =========================
+-- GROUPS
+-- =========================
 INSERT INTO "Groups" ("Id", "Name", "Description")
 VALUES
 (1, 'work', 'Items used for work, office tasks, or professional activities'),
-(2, 'home', 'items used at the house'),
-(3, 'hobby-ict', 'tools, electronic devices, gadgets, and accessories'),
-(4, 'other', 'Items that do not fit into any specific category')
+(2, 'home', 'Everyday items used around the house'),
+(3, 'food', 'Groceries, pantry items, and consumable food products'),
+(4, 'electronics', 'Electronic devices, gadgets, and accessories'),
+(5, 'other', 'Items that do not fit into any specific category')
 ON CONFLICT ("Id") DO NOTHING;
 SELECT setval(pg_get_serial_sequence('"Groups"', 'Id'),
               (SELECT MAX("Id") FROM "Groups"));
@@ -154,3 +161,5 @@ INSERT INTO "GroupProjects" ("GroupId", "ProjectId") VALUES
 ON CONFLICT ("GroupId", "ProjectId") DO NOTHING;
 
 SET session_replication_role = DEFAULT; --enable constraints
+SELECT setval(pg_get_serial_sequence('"Groups"', 'Id'),
+                                            (SELECT MAX("Id") FROM "Groups"));
