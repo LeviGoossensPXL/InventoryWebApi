@@ -6,4 +6,7 @@ namespace ExampleWebApi.Domain.Entities;
 public class User : IdentityUser<Guid>
 {
     public string NickName { get; set; }
+
+    public ICollection<GroupUser> GroupUsers { get; set; } = [];
+
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ExampleWebApi.Domain.DTOs;
+using ExampleWebApi.Domain.DTOs.Responses;
 using ExampleWebApi.Domain.Entities;
 
 namespace ExampleWebApi.Api.Profiles
@@ -8,9 +9,15 @@ namespace ExampleWebApi.Api.Profiles
     {
         public AppProfile()
         {
-            CreateMap<Item, ItemDTO>().ReverseMap();
+            CreateMap<Item, ItemDto>().ReverseMap();
+            
+            CreateMap<WishedItem, WishedItemDto>().ReverseMap();
+            CreateMap<OwnedItem, OwnedItemDto>().ReverseMap();
+            
             CreateMap<Project, ProjectDTO>().ReverseMap();
-            CreateMap<Group, GroupDTO>().ReverseMap();
+            CreateMap<Group, GroupDto>().ReverseMap();
+
+            CreateMap<User, UserResponseDto>();
         }
     }
 }

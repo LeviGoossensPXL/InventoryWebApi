@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using ExampleWebApi.Domain.DTOs;
+using ExampleWebApi.Domain.DTOs.Responses;
 using ExampleWebApi.Domain.Entities;
 using ExampleWebApi.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExampleWebApi.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
     public class GroupController : ApiControllerBase
     {
         private readonly ExampleDbContext _context;
@@ -24,7 +28,25 @@ namespace ExampleWebApi.Api.Controllers
         [HttpGet]
         public IActionResult GetGroups()
         {
-            return Ok(_context.Groups);
+            var groups = _context.Groups
+                .Include(g => g.GroupOwnedItems)
+                .Include(g => g.GroupWishedItems)
+                .Include(g => g.GroupProjects)
+                .Include(g => g.GroupUsers)
+                .ToList();
+
+            var dtoList = groups.Select(g => new GroupResponseDto
+            {
+                Id = g.Id,
+                Name = g.Name,
+                Description = g.Description,
+                OwnedItemIds = g.GroupOwnedItems.Select(goi => goi.OwnedItemId).ToList(),
+                WishedItemIds = g.GroupWishedItems.Select(gwi => gwi.WishedItemId).ToList(),
+                ProjectIds = g.GroupProjects.Select(gp => gp.ProjectId).ToList(),
+                UserIds = g.GroupUsers.Select(gu => gu.UserId).ToList()
+            }).ToList();
+
+            return Ok(dtoList);
         }
 
         [HttpGet("{id}")]
@@ -34,16 +56,35 @@ namespace ExampleWebApi.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var group = _context.Groups.FirstOrDefault(i => i.Id == id);
+
+            var group = _context.Groups
+                .Include(g => g.GroupOwnedItems)
+                .Include(g => g.GroupWishedItems)
+                .Include(g => g.GroupProjects)
+                .Include(g => g.GroupUsers)
+                .FirstOrDefault(g => g.Id == id);
+
             if (group == null)
             {
                 return NotFound();
             }
-            return Ok(group);
+
+            var dto = new GroupResponseDto
+            {
+                Id = group.Id,
+                Name = group.Name,
+                Description = group.Description,
+                OwnedItemIds = group.GroupOwnedItems.Select(goi => goi.OwnedItemId).ToList(),
+                WishedItemIds = group.GroupWishedItems.Select(gwi => gwi.WishedItemId).ToList(),
+                ProjectIds = group.GroupProjects.Select(gp => gp.ProjectId).ToList(),
+                UserIds = group.GroupUsers.Select(gu => gu.UserId).ToList()
+            };
+
+            return Ok(dto);
         }
 
         [HttpPost]
-        public IActionResult AddGroup([FromBody] GroupDTO groupDTO)
+        public IActionResult AddGroup([FromBody] GroupDto groupDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -55,38 +96,47 @@ namespace ExampleWebApi.Api.Controllers
             return CreatedAtAction(nameof(GetGroup), new { id = group.Id }, group);
         }
 
-        [HttpPost("addItems")]
-        public IActionResult AddItemsToGroup([FromBody] AddItemsToGroupDTO addItemsToGroupDto)
+        [HttpPost("{id:int}/addItems")]
+        public async Task<IActionResult> AddItemsToGroup(int id, [FromBody] AddItemsToGroupDto addItemsToGroupDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == addItemsToGroupDto.GroupId);
+            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == id);
             if (selectedGroup == null)
             {
                 return NotFound();
             }
-            var selectedItems = _context.Items.Where(i => addItemsToGroupDto.ItemIds.Contains(i.Id));
-            if (selectedItems.Count() != addItemsToGroupDto.ItemIds.Count())
+
+            var selectedOwnedItems = _context.OwnedItems.Where(oi => addItemsToGroupDto.OwnedItemIds.Contains(oi.Id));
+            if (selectedOwnedItems.Count() != addItemsToGroupDto.OwnedItemIds.Count())
             {
                 return NotFound();
             }
-            var groupItems = selectedItems.Select(i => new GroupItem { GroupId = selectedGroup.Id, ItemId = i.Id });
-            _context.GroupItems.AddRangeAsync(groupItems);
+            var groupOwnedItems = selectedOwnedItems.Select(oi => new GroupOwnedItem { GroupId = selectedGroup.Id, OwnedItemId = oi.Id });
+            await _context.GroupOwnedItems.AddRangeAsync(groupOwnedItems);
 
-            _context.SaveChanges();
+            var selectedWishedItems = _context.WishedItems.Where(i => addItemsToGroupDto.WishedItemIds.Contains(i.Id));
+            if (selectedWishedItems.Count() != addItemsToGroupDto.WishedItemIds.Count())
+            {
+                return NotFound();
+            }
+            var groupWishedItems = selectedWishedItems.Select(i => new GroupWishedItem { GroupId = selectedGroup.Id, WishedItemId = i.Id });
+            await _context.GroupWishedItems.AddRangeAsync(groupWishedItems);
+
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpPost("addProjects")]
-        public IActionResult AddProjectsToGroup([FromBody] AddProjectsToGroupDTO addProjectsToGroupDto)
+        [HttpPost("{id:int}/addProjects")]
+        public IActionResult AddProjectsToGroup(int id, [FromBody] AddProjectsToGroupDto addProjectsToGroupDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == addProjectsToGroupDto.GroupId);
+            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == id);
             if (selectedGroup == null)
             {
                 return NotFound();
@@ -103,14 +153,14 @@ namespace ExampleWebApi.Api.Controllers
             return Ok();
         }
 
-        [HttpPost("addUsers")]
-        public IActionResult AddUsersToGroup([FromBody] AddUsersToGroupDTO addUsersToGroupDto)
+        [HttpPost("{id:int}/addUsers")]
+        public IActionResult AddUsersToGroup(int id, [FromBody] AddUsersToGroupDto addUsersToGroupDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == addUsersToGroupDto.GroupId);
+            var selectedGroup = _context.Groups.FirstOrDefault(g => g.Id == id);
             if (selectedGroup == null)
             {
                 return NotFound();
@@ -128,7 +178,7 @@ namespace ExampleWebApi.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateGroup(int id, [FromBody] GroupDTO groupDTO)
+        public IActionResult UpdateGroup(int id, [FromBody] GroupDto groupDTO)
         {
             if (!ModelState.IsValid)
             {

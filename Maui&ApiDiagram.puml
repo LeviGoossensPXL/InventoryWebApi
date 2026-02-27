@@ -1,0 +1,391 @@
+@startuml
+package "Api.Domain.Dtos" {
+    +class MeasurementDto {
+        +decimal Value
+        +MeasureUnit Unit
+    }
+    
+    +class ItemListDto {
+        +int Id
+        +ItemStatus Status
+        +string Name
+        +string Brand
+        +string Type
+        +decimal? Price
+        +string? ImageUrl
+    }
+    
+    +class ItemDetailDto {
+        +int Id
+        +ItemStatus Status
+        +string Name
+        +string Brand
+        +string Type
+        +string Description
+        +decimal? Price
+        +MeasurementDto? Quantity
+        == Owned ==
+        +string? ImageUrl
+        +DateTime? AcquiredAt
+        +string? Notes
+        == Wished ==
+        +int? Priority
+    }
+    
+    +class ProjectListDto
+    {
+        +int Id
+        +string Name
+        +string Description
+    }
+    
+    +class ProjectDetailDto
+    {
+        +int Id
+        +string Name
+        +string Description
+        
+        +List<ProjectItemDto> Items
+    }
+}
+package "Api.Domain.Entities" {
+    +class Item {
+        +int Id
+        +Guid UserId
+        +User User
+        +ItemStatus Status
+        +string Name
+        +string Brand
+        +string Type
+        +string Description
+        +decimal? Price
+        +Measurement? Quantity
+        == Owned ==
+        +string? ImageUrl
+        +DateTime? AcquiredAt
+        +string? Notes
+        == Wished ==
+        +int? Priority
+    }
+    Item ..> Measurement : uses
+    
+    +enum ItemStatus {
+        Wished
+        Owned
+    }
+    Item ..> ItemStatus : uses
+    
+    +enum MeasureUnit {
+        Piece
+        Kilogram
+        Liter
+        Meter
+        SquareMeter
+    }
+    
+    +class Measurement {
+        +decimal Value
+        +MeasureUnit Unit
+    }
+    Measurement ..> MeasureUnit : uses
+    
+    +class ProjectItemRequirement {
+        +string Name
+        +string? Brand
+        +string? Type
+        +Measurement? Quantity
+    }
+  
+    +class ProjectItem {
+        +int ProjectId
+        +Project Project
+        --
+        +int RequirementId
+        +ProjectItemRequirement Requirement
+        --
+        +int? ItemId
+        +Item? Item
+        --
+        +ProjectItemStatus Status
+        +string? Notes
+    }
+    Project "1" <-- "0..*" ProjectItem
+    Item "1" <-- "0..*" ProjectItem
+    
+    ProjectItem ..> Measurement : uses
+    ProjectItem "1" <--> "1" ProjectItemRequirement
+    
+    +enum ProjectItemStatus {
+        Planned
+        InUse
+        Completed
+    }
+    ProjectItem ..> ProjectItemStatus : uses
+
+    +class Group {
+        +int Id
+        +string Name
+        +string Description
+        --
+        +ICollection<GroupItem> GroupItems
+        +ICollection<GroupProject> GroupProjects
+        +ICollection<GroupUser> GroupUsers
+    }
+
+    +class Project {
+        +int Id
+        --
+        +Guid OwnerId
+        +User Owner
+        --
+        +string Name
+        +string Description
+        --
+        +ICollection<GroupProject> GroupProjects
+        +ICollection<ProjectItem> ProjectItems
+    }
+
+    +class User <IdentityUser<Guid>> {
+        +string NickName
+        --
+        +ICollection<Item> Items
+        +ICollection<GroupUser> GroupUsers
+        +ICollection<Project>
+    }
+  
+    +class GroupItem {
+        +int GroupId
+        +Group Group
+        --
+        +int ItemId
+        +Item Item
+    }
+    Group "1" <-- "0..*" GroupItem
+    Item "1" <-- "0..*" GroupItem
+  
+    +class GroupUser {
+        +int GroupId
+        +Group Group
+        --
+        +Guid UserId
+        +User User
+    }
+    Group "1" <-- "0..*" GroupUser
+    User "1" <-- "0..*" GroupUser
+  
+    +class GroupProject {
+        +int GroupId
+        +Group Group
+        --
+        +int ProjectId
+        +Project Project
+    }
+    Group "1" <-- "0..*" GroupProject
+    Project "1" <-- "0..*" GroupProject
+}
+
+package "Api.Infrastructure" {
+    +class AppDbContext <IdentityDbContext<User, IdentityRole<Guid>, Guid>> {
+        +DbSet<Project> Projects
+        +DbSet<ProjectItem> ProjectItems
+        +DbSet<ProjectItemRequirement> ProjectItemRequirements
+        +DbSet<Item> Items
+        +DbSet<Group> Groups
+        +DbSet<GroupItem> GroupItems
+        +DbSet<GroupProject> GroupProjects
+        +DbSet<GroupUser> GroupUsers
+    }
+
+    +class SeedData <<static>> {
+        {static} +IEnumerable<Project> Projects
+        {static} +IEnumerable<ProjectItem> ProjectItems
+        {static} +IEnumerable<ProjectItemRequirement> ProjectItemRequirements
+        {static} +IEnumerable<Item> Items
+        {static} +IEnumerable<Group> Groups
+        {static} +IEnumerable<User> Users
+        {static} +IEnumerable<GroupItem> GroupItems
+        {static} +IEnumerable<GroupProject> GroupProjects
+        {static} +IEnumerable<GroupUser> GroupUsers
+    }
+}
+
+package "MauiApp" {
+    +class MauiProgram {
+        {static} +CreateMauiApp
+    }
+    class App
+    class AppShell
+}
+
+package "MauiApp.Pages" {
+    ' group
+    class GroupListPage
+    class GroupCreatePage
+    class GroupDetailPage
+    class GroupEditPage
+    ' group specific
+    class GroupAddProjectPage
+    class GroupAddItemPage
+    class GroupAddUserPage
+    
+    ' item
+    class ItemListPage
+    class ItemCreatePage
+    class ItemDetailPage
+    class ItemEditPage
+    
+    ' project
+    class ProjectListPage
+    class ProjectCreatePage
+    class ProjectDetailPage
+    class ProjectEditPage
+    ' project specific
+    class ProjectAddProjectItemPage
+    class ProjectAddItemPage
+    
+    ' user
+    class UserListPage
+    class UserCreatePage
+    class UserDetailPage
+    class UserEditPage
+    ' user specific
+    class SignInPage
+    
+    ' general
+    class SettingsPage
+    class HomePage
+}
+
+package "MauiApp.Repositories" {
+    ' group
+    +interface IGroupRepository {
+        +Task<List<Group>> GetAll()
+        +Task<Group?> Get(int id)
+        +Task<Group> Add(Group group)
+        +Task<Group?> Update(Group group)
+        +Task<bool> Delete(int id)
+        == specific ==
+        +Task<bool> AddProject(int projectId)
+        +Task<bool> AddProject(int itemId)
+        +Task<bool> AddProject(Guid userId)
+    }
+    class ApiGroupRepository
+    class FakeGroupRepository
+    
+    ' item
+    +interface IItemRepository {
+        +Task<List<Item>> GetAll()
+        +Task<Item?> Get(int id)
+        +Task<Item> Add(Item item)
+        +Task<Item?> Update(Item item)
+        +Task<bool> Delete(int id)
+    }
+    class ApiItemRepository
+    class FakeItemRepository
+    
+    ' project
+    +interface IProjectRepository {
+        +Task<List<Project>> GetAll()
+        +Task<Project?> Get(int id)
+        +Task<Project> Add(Project project)
+        +Task<Project?> Update(Project project)
+        +Task<bool> Delete(int id)
+        == specific ==
+        +Task<bool> AddProjectItem(int projectId)
+        +Task<bool> AddItem(int itemId)
+    }
+    note right of IProjectRepository::AddItem
+        Add item and link with current project
+    end note
+    class ApiProjectRepository
+    class FakeProjectRepository
+    
+    ' user
+    +interface IUserRepository {
+        +Task<List<User>> GetAll()
+        +Task<User?> Get(int id)
+        +Task<User> Add(User user)
+        +Task<User?> Update(User user)
+        +Task<bool> Delete(int id)
+    }
+    class ApiUserRepository
+    class FakeUserRepository
+}
+
+package "MauiApp.Services" {
+    class ApiUserService
+    +interface IUserService {
+        +string Token
+        Task<bool> SignIn(string email, string password);
+        Task<bool> Register(string email, string Nickname, string password);
+    }
+    class FakeUserService {
+        -List<User> _users
+    }
+}
+
+package "MauiApp.ViewModels" {
+    ' group
+    +class GroupListViewModel <ObservableObject> {
+        +ObservableCollection<Group> Groups
+        -IGroupRepository _repo
+        +void GroupListViewModel(IGroupRepository repo)
+        -Task SwipeDownRefreshAsync()
+        -Task RefreshAsync()
+    }
+    +class GroupCreateViewModel <ObservableObject> {
+        -[ObservableProperty]Group group
+        -IGroupRepository _repo
+        +void GroupCreateViewModel(IGroupRepository repo)
+    }
+    +class GroupDetailViewModel <ObservableObject> {
+        -IGroupRepository _repo
+        +void GroupDetailViewModel(IGroupRepository repo)
+    }
+    +class GroupEditViewModel <ObservableObject> {
+        -IGroupRepository _repo
+        +void GroupEditViewModel(IGroupRepository repo)
+    }
+    
+    ' item
+    +class ItemListViewModel <ObservableObject> {
+        +ObservableCollection<Item> Items
+        -IItemRepository _repo
+        +void ItemListViewModel(IItemRepository repo)
+        -Task SwipeDownRefreshAsync()
+        -Task RefreshAsync()
+    }
+    class ItemCreateViewModel
+    class ItemDetailViewModel
+    class ItemEditViewModel
+    
+    ' project
+    +class ProjectListViewModel <ObservableObject> {
+        +ObservableCollection<Project> Projects
+        -IProjectRepository _repo
+        +void ProjectListViewModel(IProjectRepository repo)
+        -Task SwipeDownRefreshAsync()
+        -Task RefreshAsync()
+    }
+    class ProjectCreateViewModel
+    class ProjectDetailViewModel
+    class ProjectEditViewModel
+    
+    ' user
+    +class UserListViewModel <ObservableObject> {
+        +ObservableCollection<User> Users
+        -IUserRepository _repo
+        +void UserListViewModel(IUserRepository repo)
+        -Task SwipeDownRefreshAsync()
+        -Task RefreshAsync()
+    }
+    class UserCreateViewModel
+    class UserDetailViewModel
+    class UserEditViewModel
+    ' user specfic '
+    class SignInViewModel
+    
+    class HomeViewModel
+    class SettingsViewModel
+}
+@enduml

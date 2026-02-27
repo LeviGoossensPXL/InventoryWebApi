@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ExampleWebApi.Domain.DTOs
 {
-    public class AddProjectsToGroupDTO
+    public class AddProjectsToGroupDto
     {
-        public int GroupId { get; set; }
         public IEnumerable<int> ProjectIds { get; set; }
     }
 }

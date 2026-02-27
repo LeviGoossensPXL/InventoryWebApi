@@ -145,7 +145,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.Use(async (context, next) =>
+{
+    context.Request.EnableBuffering();
 
+    var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
+    context.Request.Body.Position = 0;
+
+    Console.WriteLine($"➡️ {context.Request.Method} {context.Request.Path}");
+    Console.WriteLine(body);
+
+    await next();
+});
 app.UseStaticFiles();
 app.UseCors("CorsPolicy");
 // app.UseHttpsRedirection();

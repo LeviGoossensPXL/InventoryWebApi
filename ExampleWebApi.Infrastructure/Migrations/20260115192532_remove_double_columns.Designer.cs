@@ -3,6 +3,7 @@ using System;
 using ExampleWebApi.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ExampleWebApi.Infrastructure.Migrations
 {
     [DbContext(typeof(ExampleDbContext))]
-    partial class ExampleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260115192532_remove_double_columns")]
+    partial class remove_double_columns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,6 +106,31 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.ToTable("GroupWishedItems");
                 });
 
+            modelBuilder.Entity("ExampleWebApi.Domain.Entities.Item", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Items");
+                });
+
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.OwnedItem", b =>
                 {
                     b.Property<int>("Id")
@@ -114,20 +142,14 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.Property<DateTime?>("AcquiredAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("ItemId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
@@ -139,11 +161,11 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.Property<decimal?>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("ItemId");
 
                     b.HasIndex("OwnerId");
 
@@ -162,31 +184,18 @@ namespace ExampleWebApi.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
                     b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("ExampleWebApi.Domain.Entities.ProjectItem", b =>
-                {
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("VoidItemId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ProjectId", "VoidItemId");
-
-                    b.HasIndex("VoidItemId");
-
-                    b.ToTable("ProjectItems");
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.User", b =>
@@ -208,6 +217,9 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -248,6 +260,8 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -258,35 +272,6 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("ExampleWebApi.Domain.Entities.VoidItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VoidItems");
-                });
-
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.WishedItem", b =>
                 {
                     b.Property<int>("Id")
@@ -295,17 +280,11 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("ItemId")
+                        .HasColumnType("integer");
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("numeric");
@@ -313,14 +292,14 @@ namespace ExampleWebApi.Infrastructure.Migrations
                     b.Property<int?>("Priority")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("ItemId");
 
                     b.HasIndex("UserId");
 
@@ -460,7 +439,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupOwnedItem", b =>
                 {
                     b.HasOne("ExampleWebApi.Domain.Entities.Group", "Group")
-                        .WithMany("GroupOwnedItems")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -479,7 +458,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupProject", b =>
                 {
                     b.HasOne("ExampleWebApi.Domain.Entities.Group", "Group")
-                        .WithMany("GroupProjects")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -498,7 +477,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupUser", b =>
                 {
                     b.HasOne("ExampleWebApi.Domain.Entities.Group", "Group")
-                        .WithMany("GroupUsers")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -517,7 +496,7 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.GroupWishedItem", b =>
                 {
                     b.HasOne("ExampleWebApi.Domain.Entities.Group", "Group")
-                        .WithMany("GroupWishedItems")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -535,41 +514,60 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.OwnedItem", b =>
                 {
+                    b.HasOne("ExampleWebApi.Domain.Entities.Group", null)
+                        .WithMany("OwnedItems")
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("ExampleWebApi.Domain.Entities.Item", "Item")
+                        .WithMany("OwnedItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ExampleWebApi.Domain.Entities.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Item");
+
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("ExampleWebApi.Domain.Entities.ProjectItem", b =>
+            modelBuilder.Entity("ExampleWebApi.Domain.Entities.Project", b =>
                 {
-                    b.HasOne("ExampleWebApi.Domain.Entities.Project", "Project")
-                        .WithMany("ProjectItems")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("ExampleWebApi.Domain.Entities.Group", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("GroupId");
+                });
 
-                    b.HasOne("ExampleWebApi.Domain.Entities.VoidItem", "VoidItem")
-                        .WithMany("ProjectItems")
-                        .HasForeignKey("VoidItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("VoidItem");
+            modelBuilder.Entity("ExampleWebApi.Domain.Entities.User", b =>
+                {
+                    b.HasOne("ExampleWebApi.Domain.Entities.Group", null)
+                        .WithMany("Users")
+                        .HasForeignKey("GroupId");
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.WishedItem", b =>
                 {
+                    b.HasOne("ExampleWebApi.Domain.Entities.Group", null)
+                        .WithMany("WishedItems")
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("ExampleWebApi.Domain.Entities.Item", "Item")
+                        .WithMany("WishedItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ExampleWebApi.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Item");
 
                     b.Navigation("User");
                 });
@@ -627,13 +625,20 @@ namespace ExampleWebApi.Infrastructure.Migrations
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.Group", b =>
                 {
-                    b.Navigation("GroupOwnedItems");
+                    b.Navigation("OwnedItems");
 
-                    b.Navigation("GroupProjects");
+                    b.Navigation("Projects");
 
-                    b.Navigation("GroupUsers");
+                    b.Navigation("Users");
 
-                    b.Navigation("GroupWishedItems");
+                    b.Navigation("WishedItems");
+                });
+
+            modelBuilder.Entity("ExampleWebApi.Domain.Entities.Item", b =>
+                {
+                    b.Navigation("OwnedItems");
+
+                    b.Navigation("WishedItems");
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.OwnedItem", b =>
@@ -644,18 +649,11 @@ namespace ExampleWebApi.Infrastructure.Migrations
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.Project", b =>
                 {
                     b.Navigation("GroupProjects");
-
-                    b.Navigation("ProjectItems");
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.User", b =>
                 {
                     b.Navigation("GroupUsers");
-                });
-
-            modelBuilder.Entity("ExampleWebApi.Domain.Entities.VoidItem", b =>
-                {
-                    b.Navigation("ProjectItems");
                 });
 
             modelBuilder.Entity("ExampleWebApi.Domain.Entities.WishedItem", b =>

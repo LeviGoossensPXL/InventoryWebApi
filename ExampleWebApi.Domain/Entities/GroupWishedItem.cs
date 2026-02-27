@@ -5,13 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExampleWebApi.Domain.Entities
 {
-    public class GroupItem
+    public class GroupWishedItem
     {
         public int GroupId { get; set; }
         public Group Group { get; set; }
 
-        public int ItemId { get; set; }
-        public Item Item { get; set; }
+        public int WishedItemId { get; set; }
+        public WishedItem WishedItem { get; set; }
     }
-
 }
